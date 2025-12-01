@@ -1,0 +1,71 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Coins, Home, LayoutDashboard, ShoppingBag } from 'lucide-react';
+
+const Navbar = () => {
+  return (
+    <nav className="glass-panel" style={{ 
+      position: 'sticky', 
+      top: '1rem', 
+      zIndex: 100, 
+      margin: '0 var(--spacing-md)',
+      padding: '0.75rem 2rem'
+    }}>
+      <div className="flex-center" style={{ justifyContent: 'space-between' }}>
+        <Link to="/" className="flex-center" style={{ textDecoration: 'none', gap: '0.5rem' }}>
+          <div style={{ 
+            background: 'var(--color-primary)', 
+            padding: '0.5rem', 
+            borderRadius: '50%',
+            display: 'flex'
+          }}>
+            <Coins size={24} color="#fff" />
+          </div>
+          <span style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--text-main)' }}>
+            CoinLeo
+          </span>
+        </Link>
+
+        <div className="flex-center" style={{ gap: '2rem' }}>
+          <NavLink to="/" icon={<Home size={20} />} label="Home" />
+          <NavLink to="/dashboard" icon={<LayoutDashboard size={20} />} label="Dashboard" />
+          <NavLink to="/shop" icon={<ShoppingBag size={20} />} label="Shop" />
+        </div>
+
+        <div className="flex-center" style={{ gap: '1rem' }}>
+          <div className="glass-panel" style={{ padding: '0.5rem 1rem', borderRadius: 'var(--radius-full)', background: 'rgba(255,215,0,0.2)' }}>
+            <span style={{ fontWeight: '700', color: 'var(--text-main)' }}>💰 150 Coins</span>
+          </div>
+          <div style={{ 
+            width: '40px', 
+            height: '40px', 
+            borderRadius: '50%', 
+            background: 'var(--color-secondary)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+            fontWeight: 'bold'
+          }}>
+            R
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+const NavLink = ({ to, icon, label }) => (
+  <Link to={to} className="flex-center" style={{ 
+    textDecoration: 'none', 
+    color: 'var(--text-main)', 
+    fontWeight: '600',
+    gap: '0.5rem',
+    transition: 'color 0.2s'
+  }}>
+    {icon}
+    <span>{label}</span>
+  </Link>
+);
+
+export default Navbar;
