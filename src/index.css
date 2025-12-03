@@ -1,13 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
 
 :root {
   /* Brand Colors */
-  --color-primary: #FFD700; /* CoinLeo Gold */
+  --color-primary: #FFD700;
+  /* CoinLeo Gold */
   --color-primary-dark: #E6C200;
-  --color-secondary: #6C63FF; /* Magic Purple */
+  --color-secondary: #6C63FF;
+  /* Magic Purple */
   --color-secondary-dark: #5A52D5;
-  --color-accent: #FF6B6B; /* Alert/Action Red */
-  --color-success: #48BB78; /* Green */
+  --color-accent: #FF6B6B;
+  /* Alert/Action Red */
+  --color-success: #48BB78;
+  /* Green */
 
   /* Backgrounds */
   --bg-app: #F0F4F8;
@@ -54,15 +62,28 @@ body {
 }
 
 /* Typography */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 700;
   line-height: 1.2;
   margin-bottom: var(--spacing-sm);
 }
 
-h1 { font-size: 3rem; }
-h2 { font-size: 2.25rem; }
-h3 { font-size: 1.5rem; }
+h1 {
+  font-size: 3rem;
+}
+
+h2 {
+  font-size: 2.25rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
 
 p {
   margin-bottom: var(--spacing-sm);
@@ -137,4 +158,56 @@ p {
   .grid-cols-2 {
     grid-template-columns: 1fr 1fr;
   }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes coinPop {
+  0% {
+    transform: scale(0) translateY(0);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.2) translateY(-30px);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0) translateY(-60px);
+    opacity: 0;
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.4s ease;
+}
+
+.animate-coinPop {
+  animation: coinPop 1s ease forwards;
 }
