@@ -1,52 +1,115 @@
-import React from 'react';
-import { Target, TrendingUp, CheckCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { Target, TrendingUp, CheckCircle, Gamepad2, Star } from 'lucide-react';
 import { useCurrency } from '../context/CurrencyContext';
 import CoinLeoMascot from './CoinLeoMascot';
 import NeedsVsWantsGame from './NeedsVsWantsGame';
+import MoneyMatchUp from './games/MoneyMatchUp';
 
 const Dashboard = () => {
-    const { coins, getCurrencySymbol } = useCurrency();
+    const { coins, getCurrencySymbol, xp, level } = useCurrency();
+    const [selectedGame, setSelectedGame] = useState('needs-vs-wants');
+
+    // Calculate XP progress to next level
+    const xpForCurrentLevel = (level - 1) ** 2 * 100;
+    const xpForNextLevel = level ** 2 * 100;
+    const xpProgress = xp - xpForCurrentLevel;
+    const xpNeeded = xpForNextLevel - xpForCurrentLevel;
+    const xpPercentage = Math.min(100, (xpProgress / xpNeeded) * 100);
 
     return (
-        <div className="container" style={{ paddingTop: '2rem' }}>
-            <header style={{ marginBottom: '2rem' }}>
-                <h2>Welcome back, Explorer! 🚀</h2>
-                <p style={{ color: 'var(--text-muted)' }}>You have <strong>{coins} {getCurrencySymbol()}</strong>. Keep learning to earn more!</p>
+        <div className="container pt-8 pb-16">
+            <header className="mb-8">
+                <h2 className="text-4xl font-bold mb-2">Welcome back, Explorer! 🚀</h2>
+                <p className="text-gray-600 mb-4">
+                    You have <strong>{coins} {getCurrencySymbol()}</strong>. Keep learning to earn more!
+                </p>
+
+                {/* XP Bar */}
+                <div className="glass-panel p-4 rounded-2xl">
+                    <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                            <Star className="text-yellow-500" size={24} />
+                            <span className="text-xl font-bold">Level {level}</span>
+                        </div>
+                        <span className="text-sm text-gray-600">{Math.floor(xpProgress)} / {xpNeeded} XP</span>
+                    </div>
+                    <div className="w-full h-4 bg-gray-200 rounded-full overflow-hidden">
+                        <div
+                            className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-1000 ease-out"
+                            style={{ width: `${xpPercentage}%` }}
+                        ></div>
+                    </div>
+                </div>
             </header>
 
-            <div className="grid-cols-2" style={{ gridTemplateColumns: '2fr 1fr', alignItems: 'start' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2 space-y-8">
                     {/* Savings Goals */}
-                    <section className="glass-panel" style={{ padding: '2rem' }}>
-                        <div className="flex-center" style={{ justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-                            <h3><Target size={24} style={{ display: 'inline', marginRight: '0.5rem', color: 'var(--color-secondary)' }} /> Savings Goals</h3>
-                            <button className="btn btn-secondary" style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }}>+ New Goal</button>
+                    <section className="glass-panel p-6 rounded-2xl">
+                        <div className="flex items-center justify-between mb-6">
+                            <h3 className="text-2xl font-bold flex items-center gap-2">
+                                <Target className="text-purple-600" size={28} />
+                                Savings Goals
+                            </h3>
+                            <button className="btn btn-secondary text-sm px-4 py-2">+ New Goal</button>
                         </div>
 
                         <GoalCard title="New Bicycle" current={80} target={150} color="var(--color-primary)" symbol={getCurrencySymbol()} />
                         <GoalCard title="Lego Set" current={25} target={60} color="#4FD1C5" symbol={getCurrencySymbol()} />
                     </section>
 
-                    {/* Daily Challenge / Game */}
+                    {/* Games Section */}
                     <section>
-                        <h3 style={{ marginBottom: '1rem' }}>Daily Challenge</h3>
-                        <NeedsVsWantsGame />
+                        <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                            <Gamepad2 className="text-blue-600" size={28} />
+                            Learning Games
+                        </h3>
+
+                        {/* Game Selector */}
+                        <div className="flex gap-3 mb-6">
+                            <button
+                                onClick={() => setSelectedGame('needs-vs-wants')}
+                                className={`btn flex-1 ${selectedGame === 'needs-vs-wants' ? 'btn-primary' : 'btn-secondary'}`}
+                            >
+                                Needs vs Wants
+                            </button>
+                            <button
+                                onClick={() => setSelectedGame('money-match')}
+                                className={`btn flex-1 ${selectedGame === 'money-match' ? 'btn-primary' : 'btn-secondary'}`}
+                            >
+                                Money Match-Up
+                            </button>
+                        </div>
+
+                        {/* Game Display */}
+                        {selectedGame === 'needs-vs-wants' && <NeedsVsWantsGame />}
+                        {selectedGame === 'money-match' && <MoneyMatchUp />}
                     </section>
                 </div>
 
-                {/* Sidebar Stats */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                    <div className="glass-panel" style={{ padding: '1.5rem', textAlign: 'center' }}>
+                {/* Sidebar */}
+                <div className="space-y-6">
+                    <div className="glass-panel p-6 rounded-2xl text-center">
                         <CoinLeoMascot size={120} mood="happy" />
-                        <h4 style={{ marginTop: '1rem' }}>CoinLeo says:</h4>
-                        <p style={{ fontStyle: 'italic', color: 'var(--text-muted)' }}>"Remember, saving a little bit every day adds up to a lot!"</p>
+                        <h4 className="text-lg font-bold mt-4 mb-2">CoinLeo says:</h4>
+                        <p className="text-gray-600 italic text-sm">
+                            "Remember, saving a little bit every day adds up to a lot!"
+                        </p>
                     </div>
 
-                    <div className="glass-panel" style={{ padding: '1.5rem' }}>
-                        <h4>Your Progress</h4>
-                        <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                            <StatRow icon={<TrendingUp size={20} color="green" />} label="Level" value="5 (Novice)" />
-                            <StatRow icon={<CheckCircle size={20} color="blue" />} label="Lessons" value="12/50" />
+                    <div className="glass-panel p-6 rounded-2xl">
+                        <h4 className="text-xl font-bold mb-4">Your Progress</h4>
+                        <div className="space-y-4">
+                            <StatRow
+                                icon={<TrendingUp size={20} className="text-green-600" />}
+                                label="Level"
+                                value={`${level} (${level < 5 ? 'Beginner' : level < 10 ? 'Novice' : 'Expert'})`}
+                            />
+                            <StatRow
+                                icon={<CheckCircle size={20} className="text-blue-600" />}
+                                label="Total XP"
+                                value={Math.floor(xp)}
+                            />
                         </div>
                     </div>
                 </div>
@@ -58,26 +121,33 @@ const Dashboard = () => {
 const GoalCard = ({ title, current, target, color, symbol }) => {
     const percentage = Math.min(100, Math.round((current / target) * 100));
     return (
-        <div style={{ marginBottom: '1.5rem' }}>
-            <div className="flex-center" style={{ justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <strong>{title}</strong>
-                <span style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>{symbol}{current} / {symbol}{target}</span>
+        <div className="mb-6 last:mb-0">
+            <div className="flex items-center justify-between mb-2">
+                <strong className="text-lg">{title}</strong>
+                <span className="text-gray-600 text-sm">{symbol}{current} / {symbol}{target}</span>
             </div>
-            <div style={{ width: '100%', height: '12px', background: '#E2E8F0', borderRadius: 'var(--radius-full)', overflow: 'hidden' }}>
-                <div style={{ width: `${percentage}%`, height: '100%', background: color, borderRadius: 'var(--radius-full)', transition: 'width 1s ease' }}></div>
+            <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                    className="h-full rounded-full transition-all duration-1000 ease-out"
+                    style={{ width: `${percentage}%`, background: color }}
+                ></div>
+            </div>
+            <div className="text-right mt-1">
+                <span className="text-xs text-gray-500">{percentage}% complete</span>
             </div>
         </div>
     );
 };
 
 const StatRow = ({ icon, label, value }) => (
-    <div className="flex-center" style={{ justifyContent: 'space-between' }}>
-        <div className="flex-center" style={{ gap: '0.5rem' }}>
+    <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
             {icon}
-            <span>{label}</span>
+            <span className="text-gray-700">{label}</span>
         </div>
-        <strong>{value}</strong>
+        <strong className="text-gray-900">{value}</strong>
     </div>
 );
 
 export default Dashboard;
+
