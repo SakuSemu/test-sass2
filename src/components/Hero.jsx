@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Rocket, ShieldCheck, Gamepad2 } from 'lucide-react';
+import CoinLeoMascot from './CoinLeoMascot';
 
 const Hero = () => {
     return (
@@ -39,11 +40,9 @@ const Hero = () => {
                         zIndex: -1
                     }}></div>
                     <div className="glass-panel" style={{ padding: '2rem', textAlign: 'center', maxWidth: '350px' }}>
-                        <img
-                            src="https://api.dicebear.com/7.x/avataaars/svg?seed=CoinLeo&backgroundColor=FFD700"
-                            alt="CoinLeo Character"
-                            style={{ width: '200px', height: '200px', marginBottom: '1rem' }}
-                        />
+                        <div style={{ marginBottom: '1rem' }}>
+                            <CoinLeoMascot size={200} mood="excited" />
+                        </div>
                         <h3>Hi, I'm CoinLeo!</h3>
                         <p>I'm here to help you become a money master. Are you ready?</p>
                     </div>
