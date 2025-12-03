@@ -40,7 +40,7 @@ function App() {
   return (
     <ParentProvider>
       <CurrencyProvider>
-        <Router>
+        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }} basename="/test-sass">
           <Layout>
             <Routes>
               <Route path="/" element={<Hero />} />
