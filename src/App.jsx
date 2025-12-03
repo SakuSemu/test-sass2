@@ -7,11 +7,11 @@ import Hero from './components/Hero';
 import Dashboard from './components/Dashboard';
 import Shop from './components/Shop';
 import Avatar from './pages/Avatar';
+import ParentDashboard from './pages/ParentDashboard';
 import { LevelUpModal, BadgeUnlockedModal } from './components/Notifications';
 import { badges } from './data/badges';
 
 // Placeholder components for routes not yet implemented
-const ParentDashboard = () => <div className="container pt-8"><h2>Parent Dashboard (Coming Soon)</h2></div>;
 const GameHub = () => <div className="container pt-8"><h2>Game Hub (Coming Soon)</h2></div>;
 
 function App() {

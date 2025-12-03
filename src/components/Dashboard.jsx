@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Target, TrendingUp, CheckCircle, Gamepad2, Star } from 'lucide-react';
 import { useCurrency } from '../context/CurrencyContext';
 import CoinLeoMascot from './CoinLeoMascot';
 import NeedsVsWantsGame from './NeedsVsWantsGame';
 import MoneyMatchUp from './games/MoneyMatchUp';
+import SavingsStory from './games/SavingsStory';
+import AllowanceAdventure from './games/AllowanceAdventure';
+import SpeechBubble from './SpeechBubble';
 
 const Dashboard = () => {
     const { coins, getCurrencySymbol, xp, level } = useCurrency();
     const [selectedGame, setSelectedGame] = useState('needs-vs-wants');
+    const [mascotMessage, setMascotMessage] = useState("Remember, saving a little bit every day adds up to a lot!");
 
     // Calculate XP progress to next level
     const xpForCurrentLevel = (level - 1) ** 2 * 100;
@@ -15,6 +19,18 @@ const Dashboard = () => {
     const xpProgress = xp - xpForCurrentLevel;
     const xpNeeded = xpForNextLevel - xpForCurrentLevel;
     const xpPercentage = Math.min(100, (xpProgress / xpNeeded) * 100);
+
+    // Update mascot message based on level or random tips
+    useEffect(() => {
+        const tips = [
+            "Remember, saving a little bit every day adds up to a lot!",
+            "Needs are things we must have. Wants are things we'd like to have.",
+            "Earning money takes hard work. Spending it is easy!",
+            "Try to save at least 10% of every coin you earn.",
+            "Great job on your progress! Keep going!"
+        ];
+        setMascotMessage(tips[Math.floor(Math.random() * tips.length)]);
+    }, [level]);
 
     return (
         <div className="container pt-8 pb-16">
@@ -66,34 +82,51 @@ const Dashboard = () => {
                         </h3>
 
                         {/* Game Selector */}
-                        <div className="flex gap-3 mb-6">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-6">
                             <button
                                 onClick={() => setSelectedGame('needs-vs-wants')}
-                                className={`btn flex-1 ${selectedGame === 'needs-vs-wants' ? 'btn-primary' : 'btn-secondary'}`}
+                                className={`btn text-sm px-2 ${selectedGame === 'needs-vs-wants' ? 'btn-primary' : 'btn-secondary'}`}
                             >
                                 Needs vs Wants
                             </button>
                             <button
                                 onClick={() => setSelectedGame('money-match')}
-                                className={`btn flex-1 ${selectedGame === 'money-match' ? 'btn-primary' : 'btn-secondary'}`}
+                                className={`btn text-sm px-2 ${selectedGame === 'money-match' ? 'btn-primary' : 'btn-secondary'}`}
                             >
-                                Money Match-Up
+                                Money Match
+                            </button>
+                            <button
+                                onClick={() => setSelectedGame('savings-story')}
+                                className={`btn text-sm px-2 ${selectedGame === 'savings-story' ? 'btn-primary' : 'btn-secondary'}`}
+                            >
+                                Savings Story
+                            </button>
+                            <button
+                                onClick={() => setSelectedGame('allowance-adventure')}
+                                className={`btn text-sm px-2 ${selectedGame === 'allowance-adventure' ? 'btn-primary' : 'btn-secondary'}`}
+                            >
+                                Allowance Adv.
                             </button>
                         </div>
 
                         {/* Game Display */}
-                        {selectedGame === 'needs-vs-wants' && <NeedsVsWantsGame />}
-                        {selectedGame === 'money-match' && <MoneyMatchUp />}
+                        <div className="animate-fadeIn">
+                            {selectedGame === 'needs-vs-wants' && <NeedsVsWantsGame />}
+                            {selectedGame === 'money-match' && <MoneyMatchUp />}
+                            {selectedGame === 'savings-story' && <SavingsStory />}
+                            {selectedGame === 'allowance-adventure' && <AllowanceAdventure />}
+                        </div>
                     </section>
                 </div>
 
                 {/* Sidebar */}
                 <div className="space-y-6">
-                    <div className="glass-panel p-6 rounded-2xl text-center">
+                    <div className="glass-panel p-6 rounded-2xl text-center relative">
+                        <SpeechBubble text={mascotMessage} />
                         <CoinLeoMascot size={120} mood="happy" />
                         <h4 className="text-lg font-bold mt-4 mb-2">CoinLeo says:</h4>
                         <p className="text-gray-600 italic text-sm">
-                            "Remember, saving a little bit every day adds up to a lot!"
+                            "{mascotMessage}"
                         </p>
                     </div>
 
@@ -150,4 +183,3 @@ const StatRow = ({ icon, label, value }) => (
 );
 
 export default Dashboard;
-
