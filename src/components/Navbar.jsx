@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Coins, Home, LayoutDashboard, ShoppingBag } from 'lucide-react';
+import { Coins, Home, LayoutDashboard, ShoppingBag, User } from 'lucide-react';
 import { useCurrency } from '../context/CurrencyContext';
 
 const Navbar = () => {
-  const { coins, currency, setCurrency, getCurrencySymbol } = useCurrency();
+  const { coins, currency, setCurrency, getCurrencySymbol, level } = useCurrency();
 
   return (
     <nav className="glass-panel" style={{
@@ -33,6 +33,7 @@ const Navbar = () => {
           <NavLink to="/" icon={<Home size={20} />} label="Home" />
           <NavLink to="/dashboard" icon={<LayoutDashboard size={20} />} label="Dashboard" />
           <NavLink to="/shop" icon={<ShoppingBag size={20} />} label="Shop" />
+          <NavLink to="/avatar" icon={<User size={20} />} label="Avatar" />
         </div>
 
         <div className="flex-center" style={{ gap: '1rem' }}>
@@ -56,19 +57,39 @@ const Navbar = () => {
           <div className="glass-panel" style={{ padding: '0.5rem 1rem', borderRadius: 'var(--radius-full)', background: 'rgba(255,215,0,0.2)' }}>
             <span style={{ fontWeight: '700', color: 'var(--text-main)' }}>💰 {coins} {getCurrencySymbol()}</span>
           </div>
-          <div style={{
-            width: '40px',
-            height: '40px',
-            borderRadius: '50%',
-            background: 'var(--color-secondary)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white',
-            fontWeight: 'bold'
-          }}>
-            R
-          </div>
+
+          <Link to="/avatar" style={{ textDecoration: 'none' }}>
+            <div style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              background: 'var(--color-secondary)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'white',
+              fontWeight: 'bold',
+              position: 'relative',
+              cursor: 'pointer'
+            }}>
+              {level}
+              <div style={{
+                position: 'absolute',
+                bottom: '-2px',
+                right: '-2px',
+                background: 'var(--color-primary)',
+                borderRadius: '50%',
+                width: '16px',
+                height: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '10px'
+              }}>
+                ⭐
+              </div>
+            </div>
+          </Link>
         </div>
       </div>
     </nav>
