@@ -33,84 +33,88 @@ const Dashboard = () => {
     }, [level]);
 
     return (
-        <div className="container pt-8 pb-16">
-            <header className="mb-8">
-                <h2 className="text-4xl font-bold mb-2">Welcome back, Explorer! 🚀</h2>
-                <p className="text-gray-600 mb-4">
-                    You have <strong>{coins} {getCurrencySymbol()}</strong>. Keep learning to earn more!
+        <div className="container pt-12 pb-24">
+            <header className="mb-12">
+                <h2 className="text-5xl font-extrabold mb-4 tracking-tight">Welcome back, Explorer! 🚀</h2>
+                <p className="text-xl text-gray-600 mb-8">
+                    You have <strong className="text-primary-dark">{coins} {getCurrencySymbol()}</strong>. Keep learning to earn more!
                 </p>
 
                 {/* XP Bar */}
-                <div className="glass-panel p-4 rounded-2xl">
-                    <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                            <Star className="text-yellow-500" size={24} />
-                            <span className="text-xl font-bold">Level {level}</span>
+                <div className="glass-panel p-8 rounded-3xl shadow-lg">
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                            <Star className="text-yellow-500 fill-yellow-500" size={32} />
+                            <span className="text-2xl font-bold">Level {level}</span>
                         </div>
-                        <span className="text-sm text-gray-600">{Math.floor(xpProgress)} / {xpNeeded} XP</span>
+                        <span className="text-lg font-medium text-gray-600">{Math.floor(xpProgress)} / {xpNeeded} XP</span>
                     </div>
-                    <div className="w-full h-4 bg-gray-200 rounded-full overflow-hidden">
+                    <div className="w-full h-6 bg-gray-200 rounded-full overflow-hidden shadow-inner">
                         <div
-                            className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-1000 ease-out"
+                            className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-1000 ease-out relative"
                             style={{ width: `${xpPercentage}%` }}
-                        ></div>
+                        >
+                            <div className="absolute inset-0 bg-white opacity-20 animate-pulse"></div>
+                        </div>
                     </div>
                 </div>
             </header>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 space-y-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <div className="lg:col-span-8 space-y-12">
                     {/* Savings Goals */}
-                    <section className="glass-panel p-6 rounded-2xl">
-                        <div className="flex items-center justify-between mb-6">
-                            <h3 className="text-2xl font-bold flex items-center gap-2">
-                                <Target className="text-purple-600" size={28} />
+                    <section className="glass-panel p-8 rounded-3xl">
+                        <div className="flex items-center justify-between mb-8">
+                            <h3 className="text-3xl font-bold flex items-center gap-3">
+                                <Target className="text-purple-600" size={32} />
                                 Savings Goals
                             </h3>
-                            <button className="btn btn-secondary text-sm px-4 py-2">+ New Goal</button>
+                            <button className="btn btn-secondary text-sm px-6 py-3 shadow-md hover:shadow-lg transition-all">+ New Goal</button>
                         </div>
 
-                        <GoalCard title="New Bicycle" current={80} target={150} color="var(--color-primary)" symbol={getCurrencySymbol()} />
-                        <GoalCard title="Lego Set" current={25} target={60} color="#4FD1C5" symbol={getCurrencySymbol()} />
+                        <div className="space-y-8">
+                            <GoalCard title="New Bicycle" current={80} target={150} color="var(--color-primary)" symbol={getCurrencySymbol()} />
+                            <GoalCard title="Lego Set" current={25} target={60} color="#4FD1C5" symbol={getCurrencySymbol()} />
+                        </div>
                     </section>
 
                     {/* Games Section */}
                     <section>
-                        <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                            <Gamepad2 className="text-blue-600" size={28} />
+                        <h3 className="text-3xl font-bold mb-8 flex items-center gap-3">
+                            <Gamepad2 className="text-blue-600" size={32} />
                             Learning Games
                         </h3>
 
                         {/* Game Selector */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
                             <button
                                 onClick={() => setSelectedGame('needs-vs-wants')}
-                                className={`btn text-sm px-2 ${selectedGame === 'needs-vs-wants' ? 'btn-primary' : 'btn-secondary'}`}
+                                className={`btn text-base px-4 py-4 transition-all duration-300 ${selectedGame === 'needs-vs-wants' ? 'btn-primary scale-105 shadow-xl ring-4 ring-yellow-100' : 'btn-secondary opacity-90 hover:opacity-100'}`}
                             >
                                 Needs vs Wants
                             </button>
                             <button
                                 onClick={() => setSelectedGame('money-match')}
-                                className={`btn text-sm px-2 ${selectedGame === 'money-match' ? 'btn-primary' : 'btn-secondary'}`}
+                                className={`btn text-base px-4 py-4 transition-all duration-300 ${selectedGame === 'money-match' ? 'btn-primary scale-105 shadow-xl ring-4 ring-yellow-100' : 'btn-secondary opacity-90 hover:opacity-100'}`}
                             >
                                 Money Match
                             </button>
                             <button
                                 onClick={() => setSelectedGame('savings-story')}
-                                className={`btn text-sm px-2 ${selectedGame === 'savings-story' ? 'btn-primary' : 'btn-secondary'}`}
+                                className={`btn text-base px-4 py-4 transition-all duration-300 ${selectedGame === 'savings-story' ? 'btn-primary scale-105 shadow-xl ring-4 ring-yellow-100' : 'btn-secondary opacity-90 hover:opacity-100'}`}
                             >
                                 Savings Story
                             </button>
                             <button
                                 onClick={() => setSelectedGame('allowance-adventure')}
-                                className={`btn text-sm px-2 ${selectedGame === 'allowance-adventure' ? 'btn-primary' : 'btn-secondary'}`}
+                                className={`btn text-base px-4 py-4 transition-all duration-300 ${selectedGame === 'allowance-adventure' ? 'btn-primary scale-105 shadow-xl ring-4 ring-yellow-100' : 'btn-secondary opacity-90 hover:opacity-100'}`}
                             >
                                 Allowance Adv.
                             </button>
                         </div>
 
                         {/* Game Display */}
-                        <div className="animate-fadeIn">
+                        <div className="animate-fadeIn glass-panel p-8 rounded-3xl min-h-[400px]">
                             {selectedGame === 'needs-vs-wants' && <NeedsVsWantsGame />}
                             {selectedGame === 'money-match' && <MoneyMatchUp />}
                             {selectedGame === 'savings-story' && <SavingsStory />}
@@ -120,28 +124,30 @@ const Dashboard = () => {
                 </div>
 
                 {/* Sidebar */}
-                <div className="space-y-6">
-                    <div className="glass-panel p-6 rounded-2xl text-center relative">
+                <div className="lg:col-span-4 space-y-8">
+                    <div className="glass-panel p-8 rounded-3xl text-center relative overflow-visible mt-8 lg:mt-0">
                         <SpeechBubble text={mascotMessage} />
-                        <CoinLeoMascot size={120} mood="happy" />
-                        <h4 className="text-lg font-bold mt-4 mb-2">CoinLeo says:</h4>
-                        <p className="text-gray-600 italic text-sm">
+                        <div className="mt-4 transform hover:scale-105 transition-transform duration-500">
+                            <CoinLeoMascot size={180} mood="happy" />
+                        </div>
+                        <h4 className="text-2xl font-bold mt-6 mb-3 text-purple-900">CoinLeo says:</h4>
+                        <p className="text-gray-700 italic text-lg leading-relaxed">
                             "{mascotMessage}"
                         </p>
                     </div>
 
-                    <div className="glass-panel p-6 rounded-2xl">
-                        <h4 className="text-xl font-bold mb-4">Your Progress</h4>
-                        <div className="space-y-4">
+                    <div className="glass-panel p-8 rounded-3xl">
+                        <h4 className="text-2xl font-bold mb-6">Your Progress</h4>
+                        <div className="space-y-6">
                             <StatRow
-                                icon={<TrendingUp size={20} className="text-green-600" />}
+                                icon={<TrendingUp size={24} className="text-green-600" />}
                                 label="Level"
-                                value={`${level} (${level < 5 ? 'Beginner' : level < 10 ? 'Novice' : 'Expert'})`}
+                                value={<span className="text-xl">{level} <span className="text-sm font-normal text-gray-500">({level < 5 ? 'Beginner' : level < 10 ? 'Novice' : 'Expert'})</span></span>}
                             />
                             <StatRow
-                                icon={<CheckCircle size={20} className="text-blue-600" />}
+                                icon={<CheckCircle size={24} className="text-blue-600" />}
                                 label="Total XP"
-                                value={Math.floor(xp)}
+                                value={<span className="text-xl">{Math.floor(xp)}</span>}
                             />
                         </div>
                     </div>
