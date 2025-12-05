@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingBag, Check, Lock, Sparkles, Coins } from 'lucide-react';
+import { ShoppingBag, Check, Lock, Sparkles, Coins, Star, Zap, Crown } from 'lucide-react';
 import { useCurrency } from '../context/CurrencyContext';
 import { shopItems } from '../data/items';
 
@@ -21,7 +21,7 @@ const Shop = () => {
       setShowConfirm(false);
       setSelectedItem(null);
     } else {
-      alert("Not enough coins! Play more games to earn coins! 🎮");
+      alert("Not enough coins! Play more games to earn coins!");
     }
   };
 
@@ -29,62 +29,157 @@ const Shop = () => {
   const isLocked = (item) => level < item.unlockLevel;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-yellow-50">
-      <div className="container py-8">
+    <div style={{ minHeight: '100vh', background: '#F9FAFB' }}>
+      <div className="container" style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-4 animate-bounce-in">🛍️ CoinLeo Shop</h1>
-          <p className="text-2xl text-gray-700 mb-6">Spend your coins on awesome rewards!</p>
-          <div className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full shadow-fun">
-            <Coins className="text-white" size={32} />
-            <span className="text-3xl font-bold text-white">{coins} {symbol}</span>
+        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginBottom: '1rem' }}>
+            <ShoppingBag size={40} style={{ color: '#4F46E5' }} />
+            <h1 style={{ fontSize: '3rem', fontWeight: 800 }}>Shop</h1>
+          </div>
+          <p style={{ fontSize: '1.25rem', color: '#4B5563', marginBottom: '1.5rem' }}>
+            Spend your hard-earned coins on awesome rewards!
+          </p>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            padding: '1rem 2rem',
+            background: 'linear-gradient(135deg, #F59E0B, #F97316)',
+            borderRadius: '9999px',
+            boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+          }}>
+            <Coins size={28} style={{ color: 'white' }} />
+            <span style={{ fontSize: '1.5rem', fontWeight: 700, color: 'white' }}>
+              {coins} {symbol}
+            </span>
           </div>
         </div>
 
-        {/* Items Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {shopItems.map(item => {
+        {/* Items Grid - Desktop 4 columns */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, 1fr)',
+          gap: '1.5rem'
+        }}>
+          {shopItems.map((item, index) => {
             const owned = isOwned(item.id);
             const locked = isLocked(item);
 
             return (
               <div
                 key={item.id}
-                className={`fun-card p-8 transition-all ${!locked && !owned ? 'hover:scale-105 cursor-pointer animate-bounce-in' : 'opacity-60'}`}
+                className="card"
+                style={{
+                  cursor: !locked && !owned ? 'pointer' : 'default',
+                  opacity: locked || owned ? 0.7 : 1,
+                  transition: 'all 0.2s',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
                 onClick={() => !locked && !owned && setSelectedItem(item)}
-                style={{ animationDelay: `${item.id * 0.1}s` }}
+                onMouseEnter={(e) => {
+                  if (!locked && !owned) {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.boxShadow = '0 10px 15px -3px rgb(0 0 0 / 0.1)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 1px 3px 0 rgb(0 0 0 / 0.1)';
+                }}
               >
-                <div className="text-center">
-                  <div className="text-8xl mb-4 animate-wiggle">{item.emoji}</div>
-                  <h3 className="text-2xl font-bold mb-3">{item.name}</h3>
+                {/* Rarity Badge */}
+                {item.unlockLevel > 5 && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '0.75rem',
+                    right: '0.75rem',
+                    background: 'linear-gradient(135deg, #F59E0B, #F97316)',
+                    color: 'white',
+                    padding: '0.25rem 0.5rem',
+                    borderRadius: '0.25rem',
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.25rem'
+                  }}>
+                    <Crown size={12} />
+                    RARE
+                  </div>
+                )}
+
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>{item.emoji}</div>
+                  <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+                    {item.name}
+                  </h3>
 
                   {locked && (
-                    <div className="flex items-center justify-center gap-2 text-gray-500 mb-4">
-                      <Lock size={20} />
-                      <span className="font-semibold">Unlock at Level {item.unlockLevel}</span>
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.5rem',
+                      color: '#6B7280',
+                      marginBottom: '0.75rem',
+                      fontSize: '0.875rem'
+                    }}>
+                      <Lock size={16} />
+                      <span>Level {item.unlockLevel}</span>
                     </div>
                   )}
 
                   {item.buff && !locked && (
-                    <div className="flex items-center justify-center gap-2 text-purple-600 mb-4 bg-purple-50 py-2 px-4 rounded-full">
-                      <Sparkles size={16} />
-                      <span className="text-sm font-bold">{item.buff.description}</span>
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.375rem',
+                      background: '#EEF2FF',
+                      color: '#4F46E5',
+                      padding: '0.5rem',
+                      borderRadius: '0.5rem',
+                      marginBottom: '0.75rem',
+                      fontSize: '0.75rem',
+                      fontWeight: 600
+                    }}>
+                      <Sparkles size={14} />
+                      <span>{item.buff.description}</span>
                     </div>
                   )}
 
-                  <div className="text-3xl font-bold text-orange-600 mb-6">
-                    💰 {item.price} {symbol}
+                  <div style={{
+                    fontSize: '1.5rem',
+                    fontWeight: 800,
+                    color: '#F59E0B',
+                    marginBottom: '1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.5rem'
+                  }}>
+                    <Coins size={20} />
+                    {item.price}
                   </div>
 
                   <button
-                    className={`btn w-full ${owned ? 'btn-outline' : locked ? 'btn-outline opacity-50' : 'btn-primary'}`}
+                    className={owned ? 'btn btn-secondary' : 'btn btn-primary'}
+                    style={{ width: '100%', fontSize: '0.875rem' }}
                     onClick={(e) => {
                       e.stopPropagation();
                       if (!locked && !owned) handleBuyClick(item);
                     }}
                     disabled={owned || locked}
                   >
-                    {owned ? <><Check size={20} /> You Own This!</> : locked ? <><Lock size={20} /> Locked</> : '🛒 Buy Now'}
+                    {owned ? (
+                      <><Check size={16} /> Owned</>
+                    ) : locked ? (
+                      <><Lock size={16} /> Locked</>
+                    ) : (
+                      <>Buy Now</>
+                    )}
                   </button>
                 </div>
               </div>
@@ -94,23 +189,39 @@ const Shop = () => {
 
         {/* Purchase Confirmation Modal */}
         {showConfirm && selectedItem && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 animate-bounce-in">
-            <div className="fun-card fun-card-orange max-w-md w-full p-8">
-              <div className="text-center">
-                <div className="text-8xl mb-4">{selectedItem.emoji}</div>
-                <h3 className="text-3xl font-bold mb-4">Buy {selectedItem.name}?</h3>
-                <p className="text-xl text-gray-700 mb-6">
-                  This will cost <strong className="text-orange-600">{selectedItem.price} {symbol}</strong>
+          <div style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0, 0, 0, 0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 50,
+            padding: '1rem'
+          }}>
+            <div className="card" style={{ maxWidth: '28rem', width: '100%' }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '5rem', marginBottom: '1rem' }}>{selectedItem.emoji}</div>
+                <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>
+                  Buy {selectedItem.name}?
+                </h3>
+                <p style={{ color: '#4B5563', marginBottom: '1.5rem' }}>
+                  This will cost <strong style={{ color: '#F59E0B' }}>{selectedItem.price} {symbol}</strong>
                 </p>
-                <div className="flex gap-4">
+                <div style={{ display: 'flex', gap: '1rem' }}>
                   <button
-                    className="btn btn-outline flex-1"
+                    className="btn btn-secondary"
+                    style={{ flex: 1 }}
                     onClick={() => { setShowConfirm(false); setSelectedItem(null); }}
                   >
-                    ❌ Cancel
+                    Cancel
                   </button>
-                  <button className="btn btn-primary flex-1" onClick={confirmPurchase}>
-                    ✅ Buy It!
+                  <button
+                    className="btn btn-primary"
+                    style={{ flex: 1 }}
+                    onClick={confirmPurchase}
+                  >
+                    Confirm
                   </button>
                 </div>
               </div>

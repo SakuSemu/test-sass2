@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Target, TrendingUp, Gamepad2, Star, Trophy, Flame } from 'lucide-react';
+import React, { useState } from 'react';
+import { Target, TrendingUp, Gamepad2, Star, Trophy, Flame, Award, Zap, BookOpen, Coins as CoinsIcon } from 'lucide-react';
 import { useCurrency } from '../context/CurrencyContext';
 import CoinLeoMascot from './CoinLeoMascot';
 import NeedsVsWantsGame from './NeedsVsWantsGame';
@@ -11,7 +11,6 @@ const Dashboard = () => {
     const { coins, getCurrencySymbol, xp, level } = useCurrency();
     const [selectedGame, setSelectedGame] = useState('needs-vs-wants');
 
-    // Calculate XP progress
     const xpForCurrentLevel = (level - 1) ** 2 * 100;
     const xpForNextLevel = level ** 2 * 100;
     const xpProgress = xp - xpForCurrentLevel;
@@ -21,121 +20,198 @@ const Dashboard = () => {
     const levelTitle = level < 5 ? 'Beginner' : level < 10 ? 'Explorer' : 'Master';
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
-            <div className="container py-8">
+        <div style={{ minHeight: '100vh', background: '#F9FAFB' }}>
+            <div className="container" style={{ paddingTop: '2rem', paddingBottom: '3rem' }}>
                 {/* Welcome Header */}
-                <div className="mb-8 text-center md:text-left">
-                    <h1 className="text-5xl font-bold mb-3 animate-bounce-in">Welcome Back! 👋</h1>
-                    <p className="text-2xl text-gray-700">
-                        You have <span className="font-bold text-green-600">{coins} {getCurrencySymbol()}</span> to spend!
+                <div style={{ marginBottom: '2rem' }}>
+                    <h1 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>
+                        Welcome Back! 👋
+                    </h1>
+                    <p style={{ fontSize: '1.125rem', color: '#4B5563' }}>
+                        You have <span style={{ fontWeight: 700, color: '#10B981' }}>{coins} {getCurrencySymbol()}</span> to spend
                     </p>
                 </div>
 
-                {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                {/* Stats Grid - 4 columns */}
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(4, 1fr)',
+                    gap: '1.5rem',
+                    marginBottom: '2rem'
+                }}>
                     {/* Level Card */}
-                    <div className="fun-card fun-card-green p-6 animate-bounce-in">
-                        <div className="flex items-center gap-4 mb-4">
-                            <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center shadow-lg">
-                                <Star className="text-white" size={32} fill="white" />
+                    <div className="card" style={{
+                        background: 'linear-gradient(135deg, #EEF2FF, #E0E7FF)',
+                        borderColor: '#C7D2FE'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+                            <div style={{
+                                width: '3rem',
+                                height: '3rem',
+                                background: '#4F46E5',
+                                borderRadius: '0.75rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <Star size={24} style={{ color: 'white' }} fill="white" />
                             </div>
                             <div>
-                                <p className="text-sm text-gray-600 font-semibold">Your Level</p>
-                                <p className="text-3xl font-bold">Level {level}</p>
+                                <p style={{ fontSize: '0.875rem', color: '#6B7280', fontWeight: 600 }}>Level</p>
+                                <p style={{ fontSize: '1.875rem', fontWeight: 800, color: '#4F46E5' }}>{level}</p>
                             </div>
                         </div>
-                        <div className="badge badge-green mb-3">{levelTitle}</div>
-                        <div className="progress-container">
-                            <div className="progress-bar" style={{ width: `${xpPercentage}%` }}></div>
+                        <div className="badge badge-primary" style={{ marginBottom: '0.75rem' }}>{levelTitle}</div>
+                        <div className="progress-bar-container">
+                            <div className="progress-bar-fill" style={{ width: `${xpPercentage}%` }}></div>
                         </div>
-                        <p className="text-sm text-gray-600 mt-2 font-semibold">
-                            {Math.floor(xpProgress)} / {xpNeeded} XP to next level
+                        <p style={{ fontSize: '0.75rem', color: '#6B7280', marginTop: '0.5rem', fontWeight: 600 }}>
+                            {Math.floor(xpProgress)} / {xpNeeded} XP
                         </p>
                     </div>
 
                     {/* Total XP Card */}
-                    <div className="fun-card fun-card-orange p-6 animate-bounce-in" style={{ animationDelay: '0.1s' }}>
-                        <div className="flex items-center gap-4">
-                            <div className="w-16 h-16 bg-orange-500 rounded-2xl flex items-center justify-center shadow-lg">
-                                <TrendingUp className="text-white" size={32} />
+                    <div className="card" style={{
+                        background: 'linear-gradient(135deg, #D1FAE5, #A7F3D0)',
+                        borderColor: '#6EE7B7'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <div style={{
+                                width: '3rem',
+                                height: '3rem',
+                                background: '#10B981',
+                                borderRadius: '0.75rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <TrendingUp size={24} style={{ color: 'white' }} />
                             </div>
                             <div>
-                                <p className="text-sm text-gray-600 font-semibold">Total XP</p>
-                                <p className="text-4xl font-bold text-orange-600">{Math.floor(xp)}</p>
+                                <p style={{ fontSize: '0.875rem', color: '#065F46', fontWeight: 600 }}>Total XP</p>
+                                <p style={{ fontSize: '1.875rem', fontWeight: 800, color: '#10B981' }}>
+                                    {Math.floor(xp)}
+                                </p>
                             </div>
                         </div>
                     </div>
 
                     {/* Streak Card */}
-                    <div className="fun-card fun-card-blue p-6 animate-bounce-in" style={{ animationDelay: '0.2s' }}>
-                        <div className="flex items-center gap-4">
-                            <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center shadow-lg">
-                                <Flame className="text-white" size={32} />
+                    <div className="card" style={{
+                        background: 'linear-gradient(135deg, #FEF3C7, #FDE68A)',
+                        borderColor: '#FCD34D'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <div style={{
+                                width: '3rem',
+                                height: '3rem',
+                                background: '#F59E0B',
+                                borderRadius: '0.75rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <Flame size={24} style={{ color: 'white' }} />
                             </div>
                             <div>
-                                <p className="text-sm text-gray-600 font-semibold">Day Streak</p>
-                                <p className="text-4xl font-bold text-blue-600">5 🔥</p>
+                                <p style={{ fontSize: '0.875rem', color: '#92400E', fontWeight: 600 }}>Streak</p>
+                                <p style={{ fontSize: '1.875rem', fontWeight: 800, color: '#F59E0B' }}>5 🔥</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Achievements Card */}
+                    <div className="card" style={{
+                        background: 'linear-gradient(135deg, #FCE7F3, #FBCFE8)',
+                        borderColor: '#F9A8D4'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <div style={{
+                                width: '3rem',
+                                height: '3rem',
+                                background: '#EC4899',
+                                borderRadius: '0.75rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <Trophy size={24} style={{ color: 'white' }} />
+                            </div>
+                            <div>
+                                <p style={{ fontSize: '0.875rem', color: '#831843', fontWeight: 600 }}>Badges</p>
+                                <p style={{ fontSize: '1.875rem', fontWeight: 800, color: '#EC4899' }}>0/12</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
                     {/* Main Content */}
-                    <div className="lg:col-span-2 space-y-8">
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                         {/* Savings Goals */}
-                        <div className="fun-card p-8">
-                            <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-3xl font-bold flex items-center gap-3">
-                                    <Target className="text-purple-600" size={32} />
-                                    My Savings Goals
+                        <div className="card">
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+                                <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '1.5rem' }}>
+                                    <Target size={28} style={{ color: '#4F46E5' }} />
+                                    Savings Goals
                                 </h2>
-                                <button className="btn btn-outline text-sm px-6">+ Add Goal</button>
+                                <button className="btn btn-primary" style={{ fontSize: '0.875rem' }}>
+                                    + Add Goal
+                                </button>
                             </div>
 
-                            <div className="space-y-6">
-                                <GoalCard title="New Bicycle 🚲" current={80} target={150} symbol={getCurrencySymbol()} />
-                                <GoalCard title="Lego Set 🧱" current={25} target={60} symbol={getCurrencySymbol()} />
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                                <GoalCard title="New Bicycle 🚲" current={80} target={150} symbol={getCurrencySymbol()} color="#4F46E5" />
+                                <GoalCard title="Lego Set 🧱" current={25} target={60} symbol={getCurrencySymbol()} color="#10B981" />
                             </div>
                         </div>
 
                         {/* Learning Games */}
                         <div>
-                            <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
-                                <Gamepad2 className="text-green-600" size={32} />
+                            <h2 style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem', fontSize: '1.5rem' }}>
+                                <Gamepad2 size={28} style={{ color: '#10B981' }} />
                                 Learning Games
                             </h2>
 
-                            {/* Game Selector */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                            {/* Game Selector - 2x2 Grid */}
+                            <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(2, 1fr)',
+                                gap: '1rem',
+                                marginBottom: '1.5rem'
+                            }}>
                                 <GameButton
                                     active={selectedGame === 'needs-vs-wants'}
                                     onClick={() => setSelectedGame('needs-vs-wants')}
-                                    emoji="🛒"
+                                    icon={<BookOpen size={24} />}
                                     label="Needs vs Wants"
+                                    color="#4F46E5"
                                 />
                                 <GameButton
                                     active={selectedGame === 'money-match'}
                                     onClick={() => setSelectedGame('money-match')}
-                                    emoji="💰"
+                                    icon={<CoinsIcon size={24} />}
                                     label="Money Match"
+                                    color="#10B981"
                                 />
                                 <GameButton
                                     active={selectedGame === 'savings-story'}
                                     onClick={() => setSelectedGame('savings-story')}
-                                    emoji="📖"
+                                    icon={<Zap size={24} />}
                                     label="Savings Story"
+                                    color="#F59E0B"
                                 />
                                 <GameButton
                                     active={selectedGame === 'allowance-adventure'}
                                     onClick={() => setSelectedGame('allowance-adventure')}
-                                    emoji="🎒"
+                                    icon={<Award size={24} />}
                                     label="Allowance"
+                                    color="#EC4899"
                                 />
                             </div>
 
                             {/* Game Display */}
-                            <div className="fun-card p-8 animate-bounce-in">
+                            <div className="card">
                                 {selectedGame === 'needs-vs-wants' && <NeedsVsWantsGame />}
                                 {selectedGame === 'money-match' && <MoneyMatchUp />}
                                 {selectedGame === 'savings-story' && <SavingsStory />}
@@ -145,28 +221,30 @@ const Dashboard = () => {
                     </div>
 
                     {/* Sidebar */}
-                    <div className="space-y-6">
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                         {/* Mascot Card */}
-                        <div className="fun-card fun-card-green text-center p-8">
-                            <div className="mb-4 animate-float">
-                                <CoinLeoMascot size={140} mood="happy" />
+                        <div className="card" style={{ textAlign: 'center', background: 'linear-gradient(135deg, #FEF3C7, #FDE68A)' }}>
+                            <div style={{ marginBottom: '1rem' }}>
+                                <CoinLeoMascot size={120} mood="happy" />
                             </div>
-                            <h3 className="text-2xl font-bold mb-3">CoinLeo's Tip 💡</h3>
-                            <p className="text-lg text-gray-700 leading-relaxed">
+                            <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+                                CoinLeo's Tip 💡
+                            </h3>
+                            <p style={{ fontSize: '0.875rem', color: '#4B5563', lineHeight: 1.5 }}>
                                 "Save a little bit every day and watch your money grow! 🌱"
                             </p>
                         </div>
 
                         {/* Quick Stats */}
-                        <div className="fun-card p-6">
-                            <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                                <Trophy className="text-yellow-500" size={28} />
+                        <div className="card">
+                            <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', fontSize: '1.125rem' }}>
+                                <Trophy size={20} style={{ color: '#F59E0B' }} />
                                 Your Stats
                             </h3>
-                            <div className="space-y-4">
-                                <StatRow emoji="🎮" label="Games Played" value="12" />
-                                <StatRow emoji="📚" label="Lessons Done" value="8" />
-                                <StatRow emoji="🔥" label="Day Streak" value="5 days" />
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                <StatRow icon={<Gamepad2 size={18} style={{ color: '#4F46E5' }} />} label="Games Played" value="12" />
+                                <StatRow icon={<BookOpen size={18} style={{ color: '#10B981' }} />} label="Lessons Done" value="8" />
+                                <StatRow icon={<Flame size={18} style={{ color: '#F59E0B' }} />} label="Day Streak" value="5 days" />
                             </div>
                         </div>
                     </div>
@@ -176,42 +254,81 @@ const Dashboard = () => {
     );
 };
 
-const GoalCard = ({ title, current, target, symbol }) => {
+const GoalCard = ({ title, current, target, symbol, color }) => {
     const percentage = Math.min(100, Math.round((current / target) * 100));
     return (
         <div>
-            <div className="flex items-center justify-between mb-3">
-                <span className="font-bold text-xl">{title}</span>
-                <span className="text-lg text-gray-600 font-semibold">{symbol}{current} / {symbol}{target}</span>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                <span style={{ fontWeight: 700, fontSize: '1.125rem' }}>{title}</span>
+                <span style={{ fontSize: '0.875rem', color: '#6B7280', fontWeight: 600 }}>
+                    {symbol}{current} / {symbol}{target}
+                </span>
             </div>
-            <div className="progress-container">
-                <div className="progress-bar" style={{ width: `${percentage}%` }}></div>
+            <div className="progress-bar-container">
+                <div style={{
+                    height: '100%',
+                    background: `linear-gradient(90deg, ${color}, ${color}CC)`,
+                    borderRadius: '9999px',
+                    width: `${percentage}%`,
+                    transition: 'width 0.3s ease'
+                }}></div>
             </div>
-            <p className="text-sm text-gray-600 mt-2 font-semibold">{percentage}% complete! 🎉</p>
+            <p style={{ fontSize: '0.75rem', color: '#6B7280', marginTop: '0.5rem', fontWeight: 600 }}>
+                {percentage}% complete
+            </p>
         </div>
     );
 };
 
-const GameButton = ({ active, onClick, emoji, label }) => (
+const GameButton = ({ active, onClick, icon, label, color }) => (
     <button
         onClick={onClick}
-        className={`px-6 py-4 rounded-2xl font-bold text-lg transition-all flex items-center gap-3 ${active
-                ? 'bg-green-500 text-white shadow-fun transform scale-105'
-                : 'bg-white text-gray-700 shadow-md hover:shadow-lg hover:scale-105'
-            }`}
+        style={{
+            padding: '1.25rem',
+            borderRadius: '0.75rem',
+            fontWeight: 700,
+            fontSize: '1rem',
+            transition: 'all 0.15s',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            background: active ? color : 'white',
+            color: active ? 'white' : '#374151',
+            border: active ? 'none' : '1px solid #E5E7EB',
+            cursor: 'pointer',
+            boxShadow: active ? '0 4px 6px -1px rgb(0 0 0 / 0.1)' : '0 1px 2px 0 rgb(0 0 0 / 0.05)'
+        }}
+        onMouseEnter={(e) => {
+            if (!active) {
+                e.currentTarget.style.borderColor = color;
+                e.currentTarget.style.color = color;
+            }
+        }}
+        onMouseLeave={(e) => {
+            if (!active) {
+                e.currentTarget.style.borderColor = '#E5E7EB';
+                e.currentTarget.style.color = '#374151';
+            }
+        }}
     >
-        <span className="text-2xl">{emoji}</span>
+        {icon}
         <span>{label}</span>
     </button>
 );
 
-const StatRow = ({ emoji, label, value }) => (
-    <div className="flex items-center justify-between py-3 border-b-2 border-gray-100 last:border-0">
-        <div className="flex items-center gap-3">
-            <span className="text-2xl">{emoji}</span>
-            <span className="text-lg font-semibold text-gray-700">{label}</span>
+const StatRow = ({ icon, label, value }) => (
+    <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingBottom: '1rem',
+        borderBottom: '1px solid #E5E7EB'
+    }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            {icon}
+            <span style={{ fontSize: '0.875rem', fontWeight: 600, color: '#374151' }}>{label}</span>
         </div>
-        <span className="text-lg font-bold text-gray-900">{value}</span>
+        <span style={{ fontSize: '0.875rem', fontWeight: 700, color: '#111827' }}>{value}</span>
     </div>
 );
 
