@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Target, TrendingUp, CheckCircle, Gamepad2, Star, Award } from 'lucide-react';
+import { Target, TrendingUp, Gamepad2, Star, Trophy, Flame } from 'lucide-react';
 import { useCurrency } from '../context/CurrencyContext';
 import CoinLeoMascot from './CoinLeoMascot';
 import NeedsVsWantsGame from './NeedsVsWantsGame';
@@ -11,72 +11,70 @@ const Dashboard = () => {
     const { coins, getCurrencySymbol, xp, level } = useCurrency();
     const [selectedGame, setSelectedGame] = useState('needs-vs-wants');
 
-    // Calculate XP progress to next level
+    // Calculate XP progress
     const xpForCurrentLevel = (level - 1) ** 2 * 100;
     const xpForNextLevel = level ** 2 * 100;
     const xpProgress = xp - xpForCurrentLevel;
     const xpNeeded = xpForNextLevel - xpForCurrentLevel;
     const xpPercentage = Math.min(100, (xpProgress / xpNeeded) * 100);
 
-    const levelTitle = level < 5 ? 'Beginner' : level < 10 ? 'Intermediate' : 'Expert';
+    const levelTitle = level < 5 ? 'Beginner' : level < 10 ? 'Explorer' : 'Master';
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
             <div className="container py-8">
-                {/* Header */}
-                <div className="mb-8">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-2">Welcome back! 👋</h1>
-                    <p className="text-lg text-gray-600">
-                        You have <span className="font-semibold text-indigo-600">{coins} {getCurrencySymbol()}</span> to spend
+                {/* Welcome Header */}
+                <div className="mb-8 text-center md:text-left">
+                    <h1 className="text-5xl font-bold mb-3 animate-bounce-in">Welcome Back! 👋</h1>
+                    <p className="text-2xl text-gray-700">
+                        You have <span className="font-bold text-green-600">{coins} {getCurrencySymbol()}</span> to spend!
                     </p>
                 </div>
 
-                {/* Stats Grid */}
+                {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     {/* Level Card */}
-                    <div className="card">
-                        <div className="flex items-center justify-between mb-4">
-                            <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
-                                    <Star className="text-indigo-600" size={24} />
-                                </div>
-                                <div>
-                                    <p className="text-sm text-gray-500">Your Level</p>
-                                    <p className="text-2xl font-bold text-gray-900">Level {level}</p>
-                                </div>
+                    <div className="fun-card fun-card-green p-6 animate-bounce-in">
+                        <div className="flex items-center gap-4 mb-4">
+                            <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center shadow-lg">
+                                <Star className="text-white" size={32} fill="white" />
                             </div>
-                            <span className="px-3 py-1 bg-indigo-50 text-indigo-700 text-xs font-medium rounded-full">
-                                {levelTitle}
-                            </span>
+                            <div>
+                                <p className="text-sm text-gray-600 font-semibold">Your Level</p>
+                                <p className="text-3xl font-bold">Level {level}</p>
+                            </div>
                         </div>
-                        <div className="progress-bar">
-                            <div className="progress-fill" style={{ width: `${xpPercentage}%` }}></div>
+                        <div className="badge badge-green mb-3">{levelTitle}</div>
+                        <div className="progress-container">
+                            <div className="progress-bar" style={{ width: `${xpPercentage}%` }}></div>
                         </div>
-                        <p className="text-xs text-gray-500 mt-2">{Math.floor(xpProgress)} / {xpNeeded} XP to next level</p>
+                        <p className="text-sm text-gray-600 mt-2 font-semibold">
+                            {Math.floor(xpProgress)} / {xpNeeded} XP to next level
+                        </p>
                     </div>
 
                     {/* Total XP Card */}
-                    <div className="card">
-                        <div className="flex items-center gap-3 mb-2">
-                            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                                <TrendingUp className="text-green-600" size={24} />
+                    <div className="fun-card fun-card-orange p-6 animate-bounce-in" style={{ animationDelay: '0.1s' }}>
+                        <div className="flex items-center gap-4">
+                            <div className="w-16 h-16 bg-orange-500 rounded-2xl flex items-center justify-center shadow-lg">
+                                <TrendingUp className="text-white" size={32} />
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500">Total XP</p>
-                                <p className="text-2xl font-bold text-gray-900">{Math.floor(xp)}</p>
+                                <p className="text-sm text-gray-600 font-semibold">Total XP</p>
+                                <p className="text-4xl font-bold text-orange-600">{Math.floor(xp)}</p>
                             </div>
                         </div>
                     </div>
 
-                    {/* Achievements Card */}
-                    <div className="card">
-                        <div className="flex items-center gap-3 mb-2">
-                            <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
-                                <Award className="text-amber-600" size={24} />
+                    {/* Streak Card */}
+                    <div className="fun-card fun-card-blue p-6 animate-bounce-in" style={{ animationDelay: '0.2s' }}>
+                        <div className="flex items-center gap-4">
+                            <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center shadow-lg">
+                                <Flame className="text-white" size={32} />
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500">Achievements</p>
-                                <p className="text-2xl font-bold text-gray-900">0 / 12</p>
+                                <p className="text-sm text-gray-600 font-semibold">Day Streak</p>
+                                <p className="text-4xl font-bold text-blue-600">5 🔥</p>
                             </div>
                         </div>
                     </div>
@@ -86,54 +84,58 @@ const Dashboard = () => {
                     {/* Main Content */}
                     <div className="lg:col-span-2 space-y-8">
                         {/* Savings Goals */}
-                        <div className="card">
+                        <div className="fun-card p-8">
                             <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                                    <Target className="text-indigo-600" size={24} />
-                                    Savings Goals
+                                <h2 className="text-3xl font-bold flex items-center gap-3">
+                                    <Target className="text-purple-600" size={32} />
+                                    My Savings Goals
                                 </h2>
-                                <button className="btn btn-secondary text-sm">+ Add Goal</button>
+                                <button className="btn btn-outline text-sm px-6">+ Add Goal</button>
                             </div>
 
                             <div className="space-y-6">
-                                <GoalCard title="New Bicycle" current={80} target={150} symbol={getCurrencySymbol()} />
-                                <GoalCard title="Lego Set" current={25} target={60} symbol={getCurrencySymbol()} />
+                                <GoalCard title="New Bicycle 🚲" current={80} target={150} symbol={getCurrencySymbol()} />
+                                <GoalCard title="Lego Set 🧱" current={25} target={60} symbol={getCurrencySymbol()} />
                             </div>
                         </div>
 
                         {/* Learning Games */}
                         <div>
-                            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                                <Gamepad2 className="text-indigo-600" size={24} />
+                            <h2 className="text-3xl font-bold mb-6 flex items-center gap-3">
+                                <Gamepad2 className="text-green-600" size={32} />
                                 Learning Games
                             </h2>
 
                             {/* Game Selector */}
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                                 <GameButton
                                     active={selectedGame === 'needs-vs-wants'}
                                     onClick={() => setSelectedGame('needs-vs-wants')}
+                                    emoji="🛒"
                                     label="Needs vs Wants"
                                 />
                                 <GameButton
                                     active={selectedGame === 'money-match'}
                                     onClick={() => setSelectedGame('money-match')}
+                                    emoji="💰"
                                     label="Money Match"
                                 />
                                 <GameButton
                                     active={selectedGame === 'savings-story'}
                                     onClick={() => setSelectedGame('savings-story')}
+                                    emoji="📖"
                                     label="Savings Story"
                                 />
                                 <GameButton
                                     active={selectedGame === 'allowance-adventure'}
                                     onClick={() => setSelectedGame('allowance-adventure')}
+                                    emoji="🎒"
                                     label="Allowance"
                                 />
                             </div>
 
                             {/* Game Display */}
-                            <div className="card animate-fadeIn">
+                            <div className="fun-card p-8 animate-bounce-in">
                                 {selectedGame === 'needs-vs-wants' && <NeedsVsWantsGame />}
                                 {selectedGame === 'money-match' && <MoneyMatchUp />}
                                 {selectedGame === 'savings-story' && <SavingsStory />}
@@ -145,23 +147,26 @@ const Dashboard = () => {
                     {/* Sidebar */}
                     <div className="space-y-6">
                         {/* Mascot Card */}
-                        <div className="card text-center">
-                            <div className="mb-4">
-                                <CoinLeoMascot size={120} mood="happy" />
+                        <div className="fun-card fun-card-green text-center p-8">
+                            <div className="mb-4 animate-float">
+                                <CoinLeoMascot size={140} mood="happy" />
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">CoinLeo's Tip</h3>
-                            <p className="text-sm text-gray-600">
+                            <h3 className="text-2xl font-bold mb-3">CoinLeo's Tip 💡</h3>
+                            <p className="text-lg text-gray-700 leading-relaxed">
                                 "Save a little bit every day and watch your money grow! 🌱"
                             </p>
                         </div>
 
                         {/* Quick Stats */}
-                        <div className="card">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Stats</h3>
-                            <div className="space-y-3">
-                                <StatRow label="Games Played" value="12" />
-                                <StatRow label="Lessons Completed" value="8" />
-                                <StatRow label="Login Streak" value="5 days" />
+                        <div className="fun-card p-6">
+                            <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                                <Trophy className="text-yellow-500" size={28} />
+                                Your Stats
+                            </h3>
+                            <div className="space-y-4">
+                                <StatRow emoji="🎮" label="Games Played" value="12" />
+                                <StatRow emoji="📚" label="Lessons Done" value="8" />
+                                <StatRow emoji="🔥" label="Day Streak" value="5 days" />
                             </div>
                         </div>
                     </div>
@@ -175,34 +180,38 @@ const GoalCard = ({ title, current, target, symbol }) => {
     const percentage = Math.min(100, Math.round((current / target) * 100));
     return (
         <div>
-            <div className="flex items-center justify-between mb-2">
-                <span className="font-semibold text-gray-900">{title}</span>
-                <span className="text-sm text-gray-500">{symbol}{current} / {symbol}{target}</span>
+            <div className="flex items-center justify-between mb-3">
+                <span className="font-bold text-xl">{title}</span>
+                <span className="text-lg text-gray-600 font-semibold">{symbol}{current} / {symbol}{target}</span>
             </div>
-            <div className="progress-bar">
-                <div className="progress-fill" style={{ width: `${percentage}%` }}></div>
+            <div className="progress-container">
+                <div className="progress-bar" style={{ width: `${percentage}%` }}></div>
             </div>
-            <p className="text-xs text-gray-500 mt-1">{percentage}% complete</p>
+            <p className="text-sm text-gray-600 mt-2 font-semibold">{percentage}% complete! 🎉</p>
         </div>
     );
 };
 
-const GameButton = ({ active, onClick, label }) => (
+const GameButton = ({ active, onClick, emoji, label }) => (
     <button
         onClick={onClick}
-        className={`px-4 py-3 rounded-lg font-medium text-sm transition-all ${active
-                ? 'bg-indigo-600 text-white shadow-md'
-                : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+        className={`px-6 py-4 rounded-2xl font-bold text-lg transition-all flex items-center gap-3 ${active
+                ? 'bg-green-500 text-white shadow-fun transform scale-105'
+                : 'bg-white text-gray-700 shadow-md hover:shadow-lg hover:scale-105'
             }`}
     >
-        {label}
+        <span className="text-2xl">{emoji}</span>
+        <span>{label}</span>
     </button>
 );
 
-const StatRow = ({ label, value }) => (
-    <div className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">
-        <span className="text-sm text-gray-600">{label}</span>
-        <span className="text-sm font-semibold text-gray-900">{value}</span>
+const StatRow = ({ emoji, label, value }) => (
+    <div className="flex items-center justify-between py-3 border-b-2 border-gray-100 last:border-0">
+        <div className="flex items-center gap-3">
+            <span className="text-2xl">{emoji}</span>
+            <span className="text-lg font-semibold text-gray-700">{label}</span>
+        </div>
+        <span className="text-lg font-bold text-gray-900">{value}</span>
     </div>
 );
 

@@ -1,40 +1,40 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Coins, User } from 'lucide-react';
+import { Coins, User, Home, ShoppingBag, Palette, Users } from 'lucide-react';
 import { useCurrency } from '../context/CurrencyContext';
 
 const Navbar = () => {
   const { coins, getCurrencySymbol, level } = useCurrency();
 
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="container">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center group-hover:bg-indigo-700 transition-colors">
-              <Coins className="text-white" size={24} />
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="w-14 h-14 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+              <span className="text-3xl">🦁</span>
             </div>
-            <span className="text-xl font-bold text-gray-900">CoinLeo</span>
+            <span className="text-2xl font-bold text-gradient">CoinLeo</span>
           </Link>
 
-          {/* Navigation Links */}
-          <div className="hidden md:flex items-center gap-1">
-            <NavLink to="/dashboard">Dashboard</NavLink>
-            <NavLink to="/shop">Shop</NavLink>
-            <NavLink to="/avatar">Avatar</NavLink>
-            <NavLink to="/parent-dashboard">Parents</NavLink>
+          {/* Navigation Links - Hidden on mobile */}
+          <div className="hidden md:flex items-center gap-2">
+            <NavLink to="/dashboard" icon={<Home size={20} />}>Home</NavLink>
+            <NavLink to="/shop" icon={<ShoppingBag size={20} />}>Shop</NavLink>
+            <NavLink to="/avatar" icon={<Palette size={20} />}>Avatar</NavLink>
+            <NavLink to="/parent-dashboard" icon={<Users size={20} />}>Parents</NavLink>
           </div>
 
-          {/* User Info */}
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-50 rounded-lg">
-              <Coins className="text-amber-600" size={18} />
-              <span className="font-semibold text-amber-900">{coins}</span>
+          {/* User Stats */}
+          <div className="flex items-center gap-3">
+            <div className="badge badge-orange animate-wiggle">
+              <Coins size={20} />
+              <span className="text-lg font-bold">{coins}</span>
             </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-indigo-50 rounded-lg">
-              <User className="text-indigo-600" size={18} />
-              <span className="font-semibold text-indigo-900">Lv {level}</span>
+            <div className="badge badge-blue">
+              <User size={20} />
+              <span className="text-lg font-bold">Lv {level}</span>
             </div>
           </div>
         </div>
@@ -43,12 +43,13 @@ const Navbar = () => {
   );
 };
 
-const NavLink = ({ to, children }) => (
+const NavLink = ({ to, icon, children }) => (
   <Link
     to={to}
-    className="px-4 py-2 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors font-medium"
+    className="flex items-center gap-2 px-4 py-3 rounded-2xl font-semibold text-gray-700 hover:bg-green-50 hover:text-green-600 transition-all"
   >
-    {children}
+    {icon}
+    <span>{children}</span>
   </Link>
 );
 
