@@ -4,7 +4,7 @@ import { useCurrency } from '../context/CurrencyContext';
 import CoinLeoMascot from '../components/CoinLeoMascot';
 
 const Avatar = () => {
-    const { equippedItems, inventory, level } = useCurrency();
+    const { equippedItems, inventory, level, equipItem } = useCurrency();
 
     const slots = [
         { id: 'hat', name: 'Hat', icon: <Star size={24} />, color: '#4F46E5' },
@@ -136,9 +136,11 @@ const Avatar = () => {
                                         <p style={{ fontSize: '0.875rem', color: '#047857' }}>
                                             {buff.description}
                                         </p>
-                                        <p style={{ fontSize: '0.875rem', fontWeight: 700, color: '#10B981', marginTop: '0.5rem' }}>
-                                            +{buff.value}% Bonus
-                                        </p>
+                                        {buff.value && (
+                                            <p style={{ fontSize: '0.875rem', fontWeight: 700, color: '#10B981', marginTop: '0.5rem' }}>
+                                                +{buff.value}% Bonus
+                                            </p>
+                                        )}
                                     </div>
                                 ))}
                             </div>
@@ -158,7 +160,7 @@ const Avatar = () => {
                                 Your Stats
                             </h3>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                                <StatRow label="Items Equipped" value={Object.keys(equippedItems).length} />
+                                <StatRow label="Items Equipped" value={Object.values(equippedItems).filter(Boolean).length} />
                                 <StatRow label="Total Items" value={inventory.length} />
                                 <StatRow label="Active Buffs" value={activeBuffs.length} />
                             </div>
@@ -169,32 +171,47 @@ const Avatar = () => {
                 {/* Inventory Section */}
                 <div style={{ marginTop: '3rem' }}>
                     <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1.5rem' }}>
-                        Your Inventory ({inventory.length} items)
+                        Your Inventory ({inventory.length} items) - Click to equip
                     </h2>
                     {inventory.length > 0 ? (
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '1rem' }}>
-                            {inventory.map((item, index) => (
-                                <div
-                                    key={index}
-                                    className="card"
-                                    style={{
-                                        textAlign: 'center',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.2s'
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        e.currentTarget.style.transform = 'translateY(-4px)';
-                                        e.currentTarget.style.boxShadow = '0 10px 15px -3px rgb(0 0 0 / 0.1)';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.transform = 'translateY(0)';
-                                        e.currentTarget.style.boxShadow = '0 1px 3px 0 rgb(0 0 0 / 0.1)';
-                                    }}
-                                >
-                                    <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>{item.emoji}</div>
-                                    <p style={{ fontSize: '0.875rem', fontWeight: 600 }}>{item.name}</p>
-                                </div>
-                            ))}
+                            {inventory.map((item, index) => {
+                                const isEquipped = Object.values(equippedItems).some(equipped => equipped?.id === item.id);
+                                return (
+                                    <div
+                                        key={index}
+                                        className="card"
+                                        style={{
+                                            textAlign: 'center',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s',
+                                            background: isEquipped ? 'linear-gradient(135deg, #EEF2FF, #E0E7FF)' : 'white',
+                                            borderColor: isEquipped ? '#4F46E5' : '#E5E7EB',
+                                            borderWidth: isEquipped ? '2px' : '1px'
+                                        }}
+                                        onClick={() => equipItem(item)}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(-4px)';
+                                            e.currentTarget.style.boxShadow = '0 10px 15px -3px rgb(0 0 0 / 0.1)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(0)';
+                                            e.currentTarget.style.boxShadow = '0 1px 3px 0 rgb(0 0 0 / 0.1)';
+                                        }}
+                                    >
+                                        <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>{item.emoji}</div>
+                                        <p style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.25rem' }}>
+                                            {item.name}
+                                        </p>
+                                        {isEquipped && (
+                                            <div className="badge badge-primary" style={{ fontSize: '0.75rem', marginTop: '0.5rem' }}>
+                                                <Check size={12} />
+                                                Equipped
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })}
                         </div>
                     ) : (
                         <div className="card" style={{ textAlign: 'center', padding: '3rem' }}>
