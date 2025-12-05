@@ -1,70 +1,105 @@
 import React, { useState } from 'react';
+import { Lock, Unlock, Users, DollarSign, Shield, Activity, TrendingUp, Calendar } from 'lucide-react';
 import { useParent } from '../context/ParentContext';
-import { Lock, User, Settings, Activity, Shield } from 'lucide-react';
 
 const ParentDashboard = () => {
-    const { parentAuth, login, logout, settings, updateSettings, childStats } = useParent();
-    const [email, setEmail] = useState('');
+    const {
+        isAuthenticated,
+        login,
+        logout,
+        childStats,
+        settings,
+        updateSettings,
+        activityLog
+    } = useParent();
+
     const [password, setPassword] = useState('');
-    const [activeTab, setActiveTab] = useState('overview'); // overview, controls, activity
+    const [error, setError] = useState('');
 
     const handleLogin = (e) => {
         e.preventDefault();
-        // For demo purposes, any email/password works or we can use the context logic
-        // But let's use the context logic for consistency
-        if (email && password) {
-            // Auto-register if not exists for demo simplicity
-            if (!localStorage.getItem(`parent_${email}`)) {
-                localStorage.setItem(`parent_${email}`, password);
-            }
-            if (login(email, password)) {
-                // Success
-            } else {
-                alert("Invalid credentials");
-            }
+        if (login(password)) {
+            setError('');
+            setPassword('');
+        } else {
+            setError('Incorrect password. Default is "parent123"');
         }
     };
 
-    if (!parentAuth.isAuthenticated) {
+    if (!isAuthenticated) {
         return (
-            <div className="container pt-16 pb-24 flex justify-center">
-                <div className="glass-panel p-8 rounded-2xl max-w-md w-full">
-                    <div className="text-center mb-8">
-                        <div className="bg-purple-100 p-4 rounded-full inline-flex mb-4">
-                            <Shield size={40} className="text-purple-600" />
+            <div style={{
+                minHeight: '100vh',
+                background: 'linear-gradient(135deg, #EEF2FF, #E0E7FF)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}>
+                <div className="card" style={{ maxWidth: '28rem', width: '100%', padding: '3rem' }}>
+                    <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                        <div style={{
+                            width: '4rem',
+                            height: '4rem',
+                            background: '#4F46E5',
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            margin: '0 auto 1rem'
+                        }}>
+                            <Lock size={32} style={{ color: 'white' }} />
                         </div>
-                        <h2 className="text-3xl font-bold mb-2">Parent Dashboard</h2>
-                        <p className="text-gray-600">Access controls and view your child's progress.</p>
+                        <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.5rem' }}>
+                            Parent Dashboard
+                        </h1>
+                        <p style={{ color: '#6B7280' }}>
+                            Enter password to access parental controls
+                        </p>
                     </div>
 
-                    <form onSubmit={handleLogin} className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-bold mb-2">Email Address</label>
-                            <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="w-full p-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none"
-                                placeholder="parent@example.com"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-bold mb-2">Password</label>
+                    <form onSubmit={handleLogin}>
+                        <div style={{ marginBottom: '1.5rem' }}>
+                            <label style={{
+                                display: 'block',
+                                fontSize: '0.875rem',
+                                fontWeight: 600,
+                                marginBottom: '0.5rem',
+                                color: '#374151'
+                            }}>
+                                Password
+                            </label>
                             <input
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full p-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 outline-none"
-                                placeholder="••••••••"
-                                required
+                                placeholder="Enter password"
+                                style={{
+                                    width: '100%',
+                                    padding: '0.75rem',
+                                    borderRadius: '0.5rem',
+                                    border: '1px solid #D1D5DB',
+                                    fontSize: '1rem'
+                                }}
                             />
+                            {error && (
+                                <p style={{ color: '#EF4444', fontSize: '0.875rem', marginTop: '0.5rem' }}>
+                                    {error}
+                                </p>
+                            )}
                         </div>
-                        <button type="submit" className="btn btn-primary w-full py-3 text-lg">
-                            Access Dashboard
+
+                        <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
+                            <Unlock size={20} />
+                            Login
                         </button>
-                        <p className="text-xs text-center text-gray-500 mt-4">
-                            For demo: Use any email/password. It will create an account automatically.
+
+                        <p style={{
+                            fontSize: '0.75rem',
+                            color: '#9CA3AF',
+                            textAlign: 'center',
+                            marginTop: '1rem'
+                        }}>
+                            Default password: <code style={{ background: '#F3F4F6', padding: '0.25rem 0.5rem', borderRadius: '0.25rem' }}>parent123</code>
                         </p>
                     </form>
                 </div>
@@ -73,210 +108,202 @@ const ParentDashboard = () => {
     }
 
     return (
-        <div className="container pt-8 pb-16">
-            <header className="mb-8 flex justify-between items-center">
-                <div>
-                    <h2 className="text-3xl font-bold mb-2">Parent Dashboard</h2>
-                    <p className="text-gray-600">Welcome back, {parentAuth.email}</p>
-                </div>
-                <button onClick={logout} className="btn btn-secondary text-sm">
-                    Log Out
-                </button>
-            </header>
-
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                {/* Sidebar Navigation */}
-                <div className="lg:col-span-1 space-y-2">
-                    <button
-                        onClick={() => setActiveTab('overview')}
-                        className={`w-full text-left p-4 rounded-xl flex items-center gap-3 transition-all ${activeTab === 'overview' ? 'bg-purple-600 text-white shadow-lg' : 'glass-panel hover:bg-white'}`}
-                    >
-                        <User size={20} /> Overview
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('controls')}
-                        className={`w-full text-left p-4 rounded-xl flex items-center gap-3 transition-all ${activeTab === 'controls' ? 'bg-purple-600 text-white shadow-lg' : 'glass-panel hover:bg-white'}`}
-                    >
-                        <Settings size={20} /> Controls & Limits
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('activity')}
-                        className={`w-full text-left p-4 rounded-xl flex items-center gap-3 transition-all ${activeTab === 'activity' ? 'bg-purple-600 text-white shadow-lg' : 'glass-panel hover:bg-white'}`}
-                    >
-                        <Activity size={20} /> Activity Log
+        <div style={{ minHeight: '100vh', background: '#F9FAFB' }}>
+            <div className="container" style={{ paddingTop: '3rem', paddingBottom: '3rem' }}>
+                {/* Header */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
+                    <div>
+                        <h1 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <Users size={40} style={{ color: '#4F46E5' }} />
+                            Parent Dashboard
+                        </h1>
+                        <p style={{ fontSize: '1.125rem', color: '#6B7280' }}>
+                            Monitor and manage your child's learning progress
+                        </p>
+                    </div>
+                    <button onClick={logout} className="btn btn-secondary">
+                        <Lock size={20} />
+                        Logout
                     </button>
                 </div>
 
-                {/* Main Content Area */}
-                <div className="lg:col-span-3">
-                    {activeTab === 'overview' && (
-                        <div className="space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <StatCard title="Lessons Completed" value={childStats.lessonsCompleted || 0} icon={<User className="text-blue-500" />} />
-                                <StatCard title="Games Played" value={childStats.gamesPlayed || 0} icon={<Activity className="text-green-500" />} />
-                                <StatCard title="Login Streak" value={`${childStats.loginStreak || 0} Days`} icon={<Star className="text-yellow-500" />} />
+                {/* Stats Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1.5rem', marginBottom: '3rem' }}>
+                    <StatCard
+                        icon={<TrendingUp size={28} style={{ color: 'white' }} />}
+                        label="Total XP Earned"
+                        value={childStats.totalXP}
+                        color="#4F46E5"
+                    />
+                    <StatCard
+                        icon={<DollarSign size={28} style={{ color: 'white' }} />}
+                        label="Coins Earned"
+                        value={childStats.coinsEarned}
+                        color="#10B981"
+                    />
+                    <StatCard
+                        icon={<Activity size={28} style={{ color: 'white' }} />}
+                        label="Games Played"
+                        value={childStats.gamesPlayed}
+                        color="#F59E0B"
+                    />
+                    <StatCard
+                        icon={<Calendar size={28} style={{ color: 'white' }} />}
+                        label="Days Active"
+                        value={childStats.daysActive}
+                        color="#EC4899"
+                    />
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
+                    {/* Controls */}
+                    <div>
+                        <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <Shield size={24} style={{ color: '#4F46E5' }} />
+                            Parental Controls
+                        </h2>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                            {/* Weekly Allowance */}
+                            <div className="card">
+                                <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '1rem' }}>
+                                    Weekly Allowance
+                                </h3>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                    <input
+                                        type="number"
+                                        value={settings.weeklyAllowance}
+                                        onChange={(e) => updateSettings({ weeklyAllowance: parseInt(e.target.value) })}
+                                        style={{
+                                            flex: 1,
+                                            padding: '0.75rem',
+                                            borderRadius: '0.5rem',
+                                            border: '1px solid #D1D5DB',
+                                            fontSize: '1rem'
+                                        }}
+                                    />
+                                    <span style={{ fontWeight: 600, color: '#6B7280' }}>coins/week</span>
+                                </div>
                             </div>
 
-                            <div className="glass-panel p-6 rounded-2xl">
-                                <h3 className="text-xl font-bold mb-4">Learning Progress</h3>
-                                <div className="space-y-4">
+                            {/* Spending Limit */}
+                            <div className="card">
+                                <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '1rem' }}>
+                                    Daily Spending Limit
+                                </h3>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                    <input
+                                        type="number"
+                                        value={settings.spendingLimit}
+                                        onChange={(e) => updateSettings({ spendingLimit: parseInt(e.target.value) })}
+                                        style={{
+                                            flex: 1,
+                                            padding: '0.75rem',
+                                            borderRadius: '0.5rem',
+                                            border: '1px solid #D1D5DB',
+                                            fontSize: '1rem'
+                                        }}
+                                    />
+                                    <span style={{ fontWeight: 600, color: '#6B7280' }}>coins/day</span>
+                                </div>
+                            </div>
+
+                            {/* Safe Mode */}
+                            <div className="card">
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div>
-                                        <div className="flex justify-between mb-1">
-                                            <span className="text-sm font-semibold">Financial Literacy Basics</span>
-                                            <span className="text-sm text-gray-600">45%</span>
-                                        </div>
-                                        <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                                            <div className="h-full bg-blue-500 w-[45%]"></div>
-                                        </div>
+                                        <h3 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '0.5rem' }}>
+                                            Safe Mode
+                                        </h3>
+                                        <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>
+                                            Restrict access to external links and ads
+                                        </p>
                                     </div>
-                                    <div>
-                                        <div className="flex justify-between mb-1">
-                                            <span className="text-sm font-semibold">Saving & Budgeting</span>
-                                            <span className="text-sm text-gray-600">30%</span>
-                                        </div>
-                                        <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                                            <div className="h-full bg-green-500 w-[30%]"></div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div className="flex justify-between mb-1">
-                                            <span className="text-sm font-semibold">Smart Spending</span>
-                                            <span className="text-sm text-gray-600">60%</span>
-                                        </div>
-                                        <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                                            <div className="h-full bg-purple-500 w-[60%]"></div>
-                                        </div>
-                                    </div>
+                                    <button
+                                        onClick={() => updateSettings({ safeMode: !settings.safeMode })}
+                                        style={{
+                                            padding: '0.5rem 1rem',
+                                            borderRadius: '9999px',
+                                            border: 'none',
+                                            fontWeight: 700,
+                                            cursor: 'pointer',
+                                            background: settings.safeMode ? '#10B981' : '#D1D5DB',
+                                            color: 'white',
+                                            transition: 'all 0.2s'
+                                        }}
+                                    >
+                                        {settings.safeMode ? 'ON' : 'OFF'}
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                    )}
+                    </div>
 
-                    {activeTab === 'controls' && (
-                        <div className="glass-panel p-8 rounded-2xl">
-                            <h3 className="text-xl font-bold mb-6">Parental Controls</h3>
+                    {/* Activity Log */}
+                    <div>
+                        <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <Activity size={24} style={{ color: '#10B981' }} />
+                            Recent Activity
+                        </h2>
 
-                            <div className="space-y-6">
-                                <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-100">
-                                    <div>
-                                        <h4 className="font-bold">Weekly Allowance</h4>
-                                        <p className="text-sm text-gray-600">Amount automatically added each week</p>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="font-bold text-lg">$</span>
-                                        <input
-                                            type="number"
-                                            value={settings.weeklyAllowance}
-                                            onChange={(e) => updateSettings({ weeklyAllowance: parseInt(e.target.value) || 0 })}
-                                            className="w-20 p-2 border rounded-lg text-center font-bold"
-                                        />
-                                    </div>
+                        <div className="card">
+                            {activityLog.length > 0 ? (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                    {activityLog.slice(0, 8).map((log, index) => (
+                                        <div
+                                            key={index}
+                                            style={{
+                                                paddingBottom: '1rem',
+                                                borderBottom: index < 7 ? '1px solid #E5E7EB' : 'none'
+                                            }}
+                                        >
+                                            <p style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.25rem' }}>
+                                                {log.action}
+                                            </p>
+                                            <p style={{ fontSize: '0.75rem', color: '#6B7280' }}>
+                                                {new Date(log.timestamp).toLocaleString()}
+                                            </p>
+                                        </div>
+                                    ))}
                                 </div>
-
-                                <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-100">
-                                    <div>
-                                        <h4 className="font-bold">Spending Limit</h4>
-                                        <p className="text-sm text-gray-600">Maximum spending per item</p>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="font-bold text-lg">$</span>
-                                        <input
-                                            type="number"
-                                            value={settings.spendingLimit}
-                                            onChange={(e) => updateSettings({ spendingLimit: parseInt(e.target.value) || 0 })}
-                                            className="w-20 p-2 border rounded-lg text-center font-bold"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-100">
-                                    <div>
-                                        <h4 className="font-bold">Safe Mode</h4>
-                                        <p className="text-sm text-gray-600">Restrict shop items to educational only</p>
-                                    </div>
-                                    <label className="relative inline-flex items-center cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            checked={settings.safeMode}
-                                            onChange={(e) => updateSettings({ safeMode: e.target.checked })}
-                                            className="sr-only peer"
-                                        />
-                                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
-                                    </label>
-                                </div>
-                            </div>
+                            ) : (
+                                <p style={{ textAlign: 'center', color: '#6B7280', padding: '2rem' }}>
+                                    No activity yet
+                                </p>
+                            )}
                         </div>
-                    )}
-
-                    {activeTab === 'activity' && (
-                        <div className="glass-panel p-6 rounded-2xl">
-                            <h3 className="text-xl font-bold mb-6">Recent Activity</h3>
-                            <div className="space-y-4">
-                                {/* Mock activity data for demo */}
-                                <ActivityItem
-                                    action="Completed Lesson"
-                                    detail="Needs vs Wants"
-                                    time="2 hours ago"
-                                    type="success"
-                                />
-                                <ActivityItem
-                                    action="Earned Badge"
-                                    detail="First Steps"
-                                    time="1 day ago"
-                                    type="achievement"
-                                />
-                                <ActivityItem
-                                    action="Purchased Item"
-                                    detail="Cool Hat ($50)"
-                                    time="2 days ago"
-                                    type="spending"
-                                />
-                                <ActivityItem
-                                    action="Game Played"
-                                    detail="Money Match-Up (Score: 80)"
-                                    time="2 days ago"
-                                    type="neutral"
-                                />
-                            </div>
-                        </div>
-                    )}
+                    </div>
                 </div>
             </div>
         </div>
     );
 };
 
-const StatCard = ({ title, value, icon }) => (
-    <div className="glass-panel p-6 rounded-xl flex items-center gap-4">
-        <div className="p-3 bg-white rounded-full shadow-sm">
+const StatCard = ({ icon, label, value, color }) => (
+    <div className="card" style={{
+        background: `linear-gradient(135deg, ${color}, ${color}DD)`,
+        color: 'white',
+        borderColor: color
+    }}>
+        <div style={{
+            width: '3.5rem',
+            height: '3.5rem',
+            background: 'rgba(255, 255, 255, 0.2)',
+            borderRadius: '0.75rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: '1rem'
+        }}>
             {icon}
         </div>
-        <div>
-            <div className="text-sm text-gray-600">{title}</div>
-            <div className="text-2xl font-bold">{value}</div>
-        </div>
+        <p style={{ fontSize: '0.875rem', opacity: 0.9, marginBottom: '0.25rem', fontWeight: 600 }}>
+            {label}
+        </p>
+        <p style={{ fontSize: '2rem', fontWeight: 800 }}>
+            {value}
+        </p>
     </div>
 );
-
-const ActivityItem = ({ action, detail, time, type }) => {
-    const getBorderColor = () => {
-        switch (type) {
-            case 'success': return 'border-green-500';
-            case 'achievement': return 'border-yellow-500';
-            case 'spending': return 'border-red-500';
-            default: return 'border-blue-500';
-        }
-    };
-
-    return (
-        <div className={`p-4 bg-white rounded-xl border-l-4 ${getBorderColor()} shadow-sm flex justify-between items-center`}>
-            <div>
-                <div className="font-bold">{action}</div>
-                <div className="text-sm text-gray-600">{detail}</div>
-            </div>
-            <div className="text-xs text-gray-400">{time}</div>
-        </div>
-    );
-};
 
 export default ParentDashboard;
