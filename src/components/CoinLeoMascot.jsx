@@ -23,19 +23,41 @@ const CoinLeoMascot = ({ size = 150, mood = 'happy' }) => {
     const getFace = () => {
         switch (mood) {
             case 'happy':
-                return { eyes: '^_^', mouth: 'M 30 45 Q 50 55 70 45' };
+                return {
+                    leftEye: { cx: 35, cy: 45, r: 3 },
+                    rightEye: { cx: 65, cy: 45, r: 3 },
+                    mouth: 'M 30 60 Q 50 70 70 60'
+                };
             case 'excited':
-                return { eyes: '★_★', mouth: 'M 25 45 Q 50 60 75 45' };
+                return {
+                    leftEye: { cx: 35, cy: 45, r: 4 },
+                    rightEye: { cx: 65, cy: 45, r: 4 },
+                    mouth: 'M 25 60 Q 50 75 75 60'
+                };
             case 'thinking':
-                return { eyes: '-_-', mouth: 'M 35 50 L 65 50' };
+                return {
+                    leftEye: { cx: 35, cy: 45, r: 2 },
+                    rightEye: { cx: 65, cy: 45, r: 2 },
+                    mouth: 'M 35 65 L 65 65'
+                };
             case 'surprised':
-                return { eyes: 'O_O', mouth: 'M 40 55 Q 50 60 60 55' };
+                return {
+                    leftEye: { cx: 35, cy: 45, r: 5 },
+                    rightEye: { cx: 65, cy: 45, r: 5 },
+                    mouth: 'M 45 65 Q 50 70 55 65'
+                };
             case 'proud':
-                return { eyes: '^‿^', mouth: 'M 30 48 Q 50 58 70 48' };
-            case 'confused':
-                return { eyes: '@_@', mouth: 'M 35 50 Q 45 48 55 50 Q 65 52 70 50' };
+                return {
+                    leftEye: { cx: 35, cy: 45, r: 3 },
+                    rightEye: { cx: 65, cy: 45, r: 3 },
+                    mouth: 'M 30 62 Q 50 72 70 62'
+                };
             default:
-                return { eyes: '^_^', mouth: 'M 30 45 Q 50 55 70 45' };
+                return {
+                    leftEye: { cx: 35, cy: 45, r: 3 },
+                    rightEye: { cx: 65, cy: 45, r: 3 },
+                    mouth: 'M 30 60 Q 50 70 70 60'
+                };
         }
     };
 
@@ -51,8 +73,8 @@ const CoinLeoMascot = ({ size = 150, mood = 'happy' }) => {
             {/* Currency Symbol */}
             <text
                 x="50"
-                y="35"
-                fontSize="24"
+                y="30"
+                fontSize="20"
                 fontWeight="bold"
                 fill="#FFF"
                 textAnchor="middle"
@@ -61,30 +83,26 @@ const CoinLeoMascot = ({ size = 150, mood = 'happy' }) => {
                 {getSymbol()}
             </text>
 
-            {/* Eyes */}
-            <text
-                x="50"
-                y="50"
-                fontSize="16"
-                fontWeight="bold"
-                fill="#333"
-                textAnchor="middle"
-            >
-                {face.eyes}
-            </text>
+            {/* Eyes - circles instead of text */}
+            <circle {...face.leftEye} fill="#333" />
+            <circle {...face.rightEye} fill="#333" />
 
-            {/* Mouth */}
+            {/* Eye shine */}
+            <circle cx={face.leftEye.cx - 1} cy={face.leftEye.cy - 1} r="1" fill="white" opacity="0.8" />
+            <circle cx={face.rightEye.cx - 1} cy={face.rightEye.cy - 1} r="1" fill="white" opacity="0.8" />
+
+            {/* Mouth - SVG path */}
             <path
                 d={face.mouth}
                 stroke="#333"
-                strokeWidth="2"
+                strokeWidth="2.5"
                 fill="none"
                 strokeLinecap="round"
             />
 
             {/* Shine Effect */}
-            <circle cx="35" cy="30" r="8" fill="white" opacity="0.6" />
-            <circle cx="32" cy="28" r="4" fill="white" opacity="0.8" />
+            <circle cx="35" cy="25" r="8" fill="white" opacity="0.6" />
+            <circle cx="32" cy="23" r="4" fill="white" opacity="0.8" />
         </svg>
     );
 };

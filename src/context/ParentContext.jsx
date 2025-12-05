@@ -5,50 +5,43 @@ const ParentContext = createContext();
 export const useParent = () => useContext(ParentContext);
 
 export const ParentProvider = ({ children }) => {
-    // Parent authentication (localStorage-based)
-    const [parentAuth, setParentAuth] = useState({
-        isAuthenticated: false,
-        email: null
-    });
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const DEFAULT_PASSWORD = 'parent123';
 
-    // Parent settings
     const [settings, setSettings] = useState({
         weeklyAllowance: 10,
         spendingLimit: 100,
-        safeMode: false,
-        bonusRewards: {
-            enabled: true,
-            xpMultiplier: 1.0,
-            coinMultiplier: 1.0
-        }
+        safeMode: false
     });
 
-    // Child statistics (tracked for parent dashboard)
     const [childStats, setChildStats] = useState({
-        lessonsCompleted: 0,
+        totalXP: 0,
+        coinsEarned: 0,
         gamesPlayed: 0,
-        correctAnswers: 0,
-        incorrectAnswers: 0,
-        totalTimeSpent: 0, // in minutes
-        lastLogin: null,
-        loginStreak: 0
+        daysActive: 1
     });
 
-    // Load from localStorage on mount
+    const [activityLog, setActivityLog] = useState([
+        { action: 'Started learning journey', timestamp: new Date().toISOString() }
+    ]);
+
+    // Load from localStorage
     useEffect(() => {
         const savedAuth = localStorage.getItem('parentAuth');
         const savedSettings = localStorage.getItem('parentSettings');
         const savedStats = localStorage.getItem('childStats');
+        const savedLog = localStorage.getItem('activityLog');
 
-        if (savedAuth) setParentAuth(JSON.parse(savedAuth));
+        if (savedAuth) setIsAuthenticated(JSON.parse(savedAuth));
         if (savedSettings) setSettings(JSON.parse(savedSettings));
         if (savedStats) setChildStats(JSON.parse(savedStats));
+        if (savedLog) setActivityLog(JSON.parse(savedLog));
     }, []);
 
-    // Save to localStorage when changed
+    // Save to localStorage
     useEffect(() => {
-        localStorage.setItem('parentAuth', JSON.stringify(parentAuth));
-    }, [parentAuth]);
+        localStorage.setItem('parentAuth', JSON.stringify(isAuthenticated));
+    }, [isAuthenticated]);
 
     useEffect(() => {
         localStorage.setItem('parentSettings', JSON.stringify(settings));
@@ -58,78 +51,45 @@ export const ParentProvider = ({ children }) => {
         localStorage.setItem('childStats', JSON.stringify(childStats));
     }, [childStats]);
 
-    const login = (email, password) => {
-        // Simple localStorage-based auth (no backend)
-        const storedPassword = localStorage.getItem(`parent_${email}`);
+    useEffect(() => {
+        localStorage.setItem('activityLog', JSON.stringify(activityLog));
+    }, [activityLog]);
 
-        if (storedPassword === password) {
-            setParentAuth({ isAuthenticated: true, email });
+    const login = (password) => {
+        if (password === DEFAULT_PASSWORD) {
+            setIsAuthenticated(true);
+            addActivity('Parent logged in');
             return true;
         }
         return false;
     };
 
-    const register = (email, password) => {
-        localStorage.setItem(`parent_${email}`, password);
-        setParentAuth({ isAuthenticated: true, email });
-        return true;
-    };
-
     const logout = () => {
-        setParentAuth({ isAuthenticated: false, email: null });
+        setIsAuthenticated(false);
+        addActivity('Parent logged out');
     };
 
     const updateSettings = (newSettings) => {
         setSettings(prev => ({ ...prev, ...newSettings }));
+        addActivity(`Settings updated: ${Object.keys(newSettings).join(', ')}`);
     };
 
-    const updateChildStats = (newStats) => {
-        setChildStats(prev => ({ ...prev, ...newStats }));
-    };
-
-    const recordActivity = (activityType, data) => {
-        const updates = {};
-
-        switch (activityType) {
-            case 'lesson_complete':
-                updates.lessonsCompleted = (childStats.lessonsCompleted || 0) + 1;
-                break;
-            case 'game_played':
-                updates.gamesPlayed = (childStats.gamesPlayed || 0) + 1;
-                break;
-            case 'correct_answer':
-                updates.correctAnswers = (childStats.correctAnswers || 0) + 1;
-                break;
-            case 'incorrect_answer':
-                updates.incorrectAnswers = (childStats.incorrectAnswers || 0) + 1;
-                break;
-            case 'login':
-                updates.lastLogin = new Date().toISOString();
-                // Calculate streak
-                const lastLogin = childStats.lastLogin ? new Date(childStats.lastLogin) : null;
-                const now = new Date();
-                if (lastLogin) {
-                    const daysDiff = Math.floor((now - lastLogin) / (1000 * 60 * 60 * 24));
-                    updates.loginStreak = daysDiff === 1 ? (childStats.loginStreak || 0) + 1 : 1;
-                } else {
-                    updates.loginStreak = 1;
-                }
-                break;
-        }
-
-        updateChildStats(updates);
+    const addActivity = (action) => {
+        setActivityLog(prev => [
+            { action, timestamp: new Date().toISOString() },
+            ...prev.slice(0, 19) // Keep last 20
+        ]);
     };
 
     const value = {
-        parentAuth,
+        isAuthenticated,
         login,
-        register,
         logout,
         settings,
         updateSettings,
         childStats,
-        updateChildStats,
-        recordActivity
+        activityLog,
+        addActivity
     };
 
     return (

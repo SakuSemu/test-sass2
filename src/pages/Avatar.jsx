@@ -1,5 +1,5 @@
 import React from 'react';
-import { Palette, Star, Zap, Shield, TrendingUp, Award } from 'lucide-react';
+import { Palette, Star, Zap, Shield, TrendingUp, Award, Check } from 'lucide-react';
 import { useCurrency } from '../context/CurrencyContext';
 import CoinLeoMascot from '../components/CoinLeoMascot';
 
