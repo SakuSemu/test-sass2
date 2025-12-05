@@ -1,79 +1,96 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Rocket, ShieldCheck, Gamepad2, TrendingUp } from 'lucide-react';
+import { Sparkles, Target, TrendingUp, Award } from 'lucide-react';
 import CoinLeoMascot from './CoinLeoMascot';
 
 const Hero = () => {
     return (
-        <section className="container pt-16 pb-24">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div className="space-y-6">
-                    <h1 className="text-6xl font-bold leading-tight">
-                        <span className="bg-gradient-to-r from-yellow-500 via-orange-500 to-pink-500 bg-clip-text text-transparent">
-                            Take the Fear
-                        </span>
-                        <br />
-                        <span className="text-gray-900">Out of Money</span>
-                    </h1>
-
-                    <p className="text-xl text-gray-600 leading-relaxed">
-                        Join CoinLeo on an adventure to master your finances. Learn to save, spend wisely,
-                        and build confidence for the future—all while playing fun games!
-                    </p>
-
-                    <div className="flex flex-wrap gap-4">
-                        <Link to="/dashboard" className="btn btn-primary text-lg px-8 py-4 hover:scale-105 transition-transform">
-                            <Rocket size={24} className="animate-bounce-slow" />
-                            Start Your Adventure
-                        </Link>
-                        <button className="btn btn-secondary text-lg px-8 py-4 bg-transparent border-2 border-purple-600 text-purple-600 hover:bg-purple-50">
-                            For Parents
-                        </button>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-6 pt-8">
-                        <Feature icon={<Gamepad2 size={32} />} title="Fun Games" description="Learn through play" />
-                        <Feature icon={<ShieldCheck size={32} />} title="Safe Learning" description="Kid-friendly environment" />
-                        <Feature icon={<TrendingUp size={32} />} title="Track Progress" description="Watch skills grow" />
-                        <Feature icon={<Rocket size={32} />} title="Earn Rewards" description="Unlock cool items" />
-                    </div>
-                </div>
-
-                <div className="relative flex items-center justify-center">
-                    {/* Background Glow */}
-                    <div className="absolute w-96 h-96 bg-gradient-to-br from-yellow-300 to-purple-400 rounded-full opacity-20 blur-3xl animate-pulse-slow"></div>
-
-                    {/* Mascot Card */}
-                    <div className="glass-panel p-10 rounded-3xl text-center max-w-md relative z-10 animate-float">
-                        <div className="mb-6">
-                            <CoinLeoMascot size={220} mood="excited" />
+        <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
+            {/* Hero Section */}
+            <div className="container py-16 md:py-24">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    {/* Left Column - Content */}
+                    <div className="animate-slideUp">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-100 rounded-full mb-6">
+                            <Sparkles className="text-indigo-600" size={16} />
+                            <span className="text-sm font-medium text-indigo-700">Financial Literacy for Kids</span>
                         </div>
-                        <h3 className="text-3xl font-bold mb-3">Hi, I'm CoinLeo!</h3>
-                        <p className="text-lg text-gray-600">
-                            I'm here to help you become a money master. Are you ready to start your journey?
+
+                        <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                            Learn About Money with <span className="text-indigo-600">CoinLeo</span>
+                        </h1>
+
+                        <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                            Make learning about money fun! Play games, earn rewards, and build smart money habits that last a lifetime.
                         </p>
 
-                        {/* Floating Elements */}
-                        <div className="absolute -top-4 -right-4 text-4xl animate-bounce">💰</div>
-                        <div className="absolute -bottom-4 -left-4 text-4xl animate-bounce" style={{ animationDelay: '0.5s' }}>⭐</div>
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <Link to="/dashboard" className="btn btn-primary text-lg px-8 py-4">
+                                Start Learning
+                            </Link>
+                            <Link to="/shop" className="btn btn-secondary text-lg px-8 py-4">
+                                Explore Shop
+                            </Link>
+                        </div>
+                    </div>
+
+                    {/* Right Column - Mascot */}
+                    <div className="flex justify-center lg:justify-end animate-fadeIn">
+                        <div className="relative">
+                            <div className="absolute inset-0 bg-indigo-200 rounded-full blur-3xl opacity-30"></div>
+                            <CoinLeoMascot size={300} mood="excited" />
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
+
+            {/* Features Section */}
+            <div className="container py-16">
+                <div className="text-center mb-12">
+                    <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Kids Love CoinLeo</h2>
+                    <p className="text-lg text-gray-600">Everything you need to learn about money in one fun place</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <FeatureCard
+                        icon={<Sparkles className="text-indigo-600" size={28} />}
+                        title="Fun Learning Games"
+                        description="Play interactive games that teach real money skills while having fun"
+                    />
+                    <FeatureCard
+                        icon={<Target className="text-green-600" size={28} />}
+                        title="Set Savings Goals"
+                        description="Track your progress towards things you want to buy and learn to save"
+                    />
+                    <FeatureCard
+                        icon={<Award className="text-amber-600" size={28} />}
+                        title="Earn Rewards"
+                        description="Get coins and badges as you learn and complete challenges"
+                    />
+                </div>
+            </div>
+
+            {/* CTA Section */}
+            <div className="container py-16">
+                <div className="card bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-center p-12">
+                    <h2 className="text-3xl font-bold mb-4">Ready to Start Your Money Journey?</h2>
+                    <p className="text-xl text-indigo-100 mb-8">Join thousands of kids learning smart money habits</p>
+                    <Link to="/dashboard" className="btn bg-white text-indigo-600 hover:bg-gray-50 text-lg px-8 py-4 inline-flex">
+                        Get Started Free
+                    </Link>
+                </div>
+            </div>
+        </div>
     );
 };
 
-const Feature = ({ icon, title, description }) => (
-    <div className="glass-panel p-4 rounded-xl hover:scale-105 transition-transform cursor-pointer">
-        <div className="flex items-start gap-3">
-            <div className="text-purple-600 flex-shrink-0">
-                {icon}
-            </div>
-            <div>
-                <h4 className="font-bold text-gray-900 mb-1">{title}</h4>
-                <p className="text-sm text-gray-600">{description}</p>
-            </div>
+const FeatureCard = ({ icon, title, description }) => (
+    <div className="card text-center hover:shadow-lg transition-all">
+        <div className="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+            {icon}
         </div>
+        <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
+        <p className="text-gray-600">{description}</p>
     </div>
 );
 
