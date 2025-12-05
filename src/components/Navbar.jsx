@@ -4,37 +4,68 @@ import { Coins, User, Home, ShoppingBag, Palette, Users } from 'lucide-react';
 import { useCurrency } from '../context/CurrencyContext';
 
 const Navbar = () => {
-  const { coins, getCurrencySymbol, level } = useCurrency();
+  const { coins, level } = useCurrency();
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
+    <nav style={{
+      background: 'white',
+      borderBottom: '1px solid #E5E7EB',
+      position: 'sticky',
+      top: 0,
+      zIndex: 50
+    }}>
       <div className="container">
-        <div className="flex items-center justify-between h-20">
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          height: '4rem'
+        }}>
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-14 h-14 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-              <span className="text-3xl">🦁</span>
+          <Link to="/" style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            textDecoration: 'none'
+          }}>
+            <div style={{
+              width: '2.5rem',
+              height: '2.5rem',
+              background: 'linear-gradient(135deg, #4F46E5, #7C3AED)',
+              borderRadius: '0.5rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.5rem'
+            }}>
+              🦁
             </div>
-            <span className="text-2xl font-bold text-green-600">CoinLeo</span>
+            <span style={{
+              fontSize: '1.5rem',
+              fontWeight: 700,
+              color: '#4F46E5'
+            }}>
+              CoinLeo
+            </span>
           </Link>
 
-          {/* Navigation Links - Hidden on mobile */}
-          <div className="hidden md:flex items-center gap-2">
-            <NavLink to="/dashboard" icon={<Home size={20} />}>Home</NavLink>
-            <NavLink to="/shop" icon={<ShoppingBag size={20} />}>Shop</NavLink>
-            <NavLink to="/avatar" icon={<Palette size={20} />}>Avatar</NavLink>
-            <NavLink to="/parent-dashboard" icon={<Users size={20} />}>Parents</NavLink>
+          {/* Navigation */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <NavLink to="/dashboard" icon={<Home size={18} />}>Dashboard</NavLink>
+            <NavLink to="/shop" icon={<ShoppingBag size={18} />}>Shop</NavLink>
+            <NavLink to="/avatar" icon={<Palette size={18} />}>Avatar</NavLink>
+            <NavLink to="/parent-dashboard" icon={<Users size={18} />}>Parents</NavLink>
           </div>
 
-          {/* User Stats */}
-          <div className="flex items-center gap-3">
-            <div className="badge badge-orange">
-              <Coins size={20} />
-              <span className="text-lg font-bold">{coins}</span>
+          {/* Stats */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div className="badge badge-warning">
+              <Coins size={16} />
+              <span>{coins}</span>
             </div>
-            <div className="badge badge-blue">
-              <User size={20} />
-              <span className="text-lg font-bold">Lv {level}</span>
+            <div className="badge badge-primary">
+              <User size={16} />
+              <span>Level {level}</span>
             </div>
           </div>
         </div>
@@ -46,7 +77,26 @@ const Navbar = () => {
 const NavLink = ({ to, icon, children }) => (
   <Link
     to={to}
-    className="flex items-center gap-2 px-4 py-3 rounded-2xl font-semibold text-gray-700 hover:bg-green-50 hover:text-green-600 transition-all"
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5rem',
+      padding: '0.5rem 1rem',
+      borderRadius: '0.5rem',
+      fontWeight: 600,
+      fontSize: '0.875rem',
+      color: '#374151',
+      textDecoration: 'none',
+      transition: 'all 0.15s'
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.background = '#F3F4F6';
+      e.currentTarget.style.color = '#4F46E5';
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.background = 'transparent';
+      e.currentTarget.style.color = '#374151';
+    }}
   >
     {icon}
     <span>{children}</span>
@@ -54,4 +104,3 @@ const NavLink = ({ to, icon, children }) => (
 );
 
 export default Navbar;
-
