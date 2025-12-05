@@ -15,7 +15,7 @@ const Navbar = () => {
             <div className="w-14 h-14 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
               <span className="text-3xl">🦁</span>
             </div>
-            <span className="text-2xl font-bold text-gradient">CoinLeo</span>
+            <span className="text-2xl font-bold text-green-600">CoinLeo</span>
           </Link>
 
           {/* Navigation Links - Hidden on mobile */}
@@ -28,7 +28,7 @@ const Navbar = () => {
 
           {/* User Stats */}
           <div className="flex items-center gap-3">
-            <div className="badge badge-orange animate-wiggle">
+            <div className="badge badge-orange">
               <Coins size={20} />
               <span className="text-lg font-bold">{coins}</span>
             </div>
@@ -54,3 +54,4 @@ const NavLink = ({ to, icon, children }) => (
 );
 
 export default Navbar;
+
