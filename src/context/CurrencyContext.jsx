@@ -7,25 +7,18 @@ export const useCurrency = () => useContext(CurrencyContext);
 const LEVEL_FORMULA = (xp) => Math.floor(Math.sqrt(xp / 100)) + 1;
 
 export const CurrencyProvider = ({ children }) => {
-    // Existing state
-    const [currency, setCurrency] = useState('USD'); // USD, EUR, JPY
+    const [currency, setCurrency] = useState('USD');
     const [coins, setCoins] = useState(150);
     const [inventory, setInventory] = useState([]);
-
-    // V3: New progression state
     const [xp, setXp] = useState(0);
     const [level, setLevel] = useState(1);
     const [badges, setBadges] = useState([]);
-
-    // V3: Avatar & equipment state
     const [equippedItems, setEquippedItems] = useState({
         hat: null,
         cape: null,
         pet: null,
         accessory: null
     });
-
-    // V3: Stats from equipped items
     const [stats, setStats] = useState({
         coinBonus: 0,
         xpBoost: 0,
@@ -33,12 +26,59 @@ export const CurrencyProvider = ({ children }) => {
         dailyBonus: 0
     });
 
+    // Load from localStorage on mount
+    useEffect(() => {
+        const savedCurrency = localStorage.getItem('currency');
+        const savedCoins = localStorage.getItem('coins');
+        const savedInventory = localStorage.getItem('inventory');
+        const savedXp = localStorage.getItem('xp');
+        const savedLevel = localStorage.getItem('level');
+        const savedBadges = localStorage.getItem('badges');
+        const savedEquippedItems = localStorage.getItem('equippedItems');
+
+        if (savedCurrency) setCurrency(savedCurrency);
+        if (savedCoins) setCoins(parseInt(savedCoins));
+        if (savedInventory) setInventory(JSON.parse(savedInventory));
+        if (savedXp) setXp(parseFloat(savedXp));
+        if (savedLevel) setLevel(parseInt(savedLevel));
+        if (savedBadges) setBadges(JSON.parse(savedBadges));
+        if (savedEquippedItems) setEquippedItems(JSON.parse(savedEquippedItems));
+    }, []);
+
+    // Save to localStorage when state changes
+    useEffect(() => {
+        localStorage.setItem('currency', currency);
+    }, [currency]);
+
+    useEffect(() => {
+        localStorage.setItem('coins', coins.toString());
+    }, [coins]);
+
+    useEffect(() => {
+        localStorage.setItem('inventory', JSON.stringify(inventory));
+    }, [inventory]);
+
+    useEffect(() => {
+        localStorage.setItem('xp', xp.toString());
+    }, [xp]);
+
+    useEffect(() => {
+        localStorage.setItem('level', level.toString());
+    }, [level]);
+
+    useEffect(() => {
+        localStorage.setItem('badges', JSON.stringify(badges));
+    }, [badges]);
+
+    useEffect(() => {
+        localStorage.setItem('equippedItems', JSON.stringify(equippedItems));
+    }, [equippedItems]);
+
     // Calculate level when XP changes
     useEffect(() => {
         const newLevel = LEVEL_FORMULA(xp);
         if (newLevel > level) {
             setLevel(newLevel);
-            // Trigger level-up event (can be listened to by components)
             window.dispatchEvent(new CustomEvent('levelUp', { detail: { level: newLevel } }));
         }
     }, [xp, level]);
@@ -100,14 +140,12 @@ export const CurrencyProvider = ({ children }) => {
         setInventory(prev => [...prev, item]);
     };
 
-    // V3: New XP system
     const addXP = (amount) => {
         const bonusXP = Math.floor(amount * (1 + stats.xpBoost / 100));
         setXp(prev => prev + bonusXP);
         return bonusXP;
     };
 
-    // V3: Badge system
     const unlockBadge = (badgeId) => {
         if (!badges.includes(badgeId)) {
             setBadges(prev => [...prev, badgeId]);
@@ -117,7 +155,6 @@ export const CurrencyProvider = ({ children }) => {
         return false;
     };
 
-    // V3: Equipment system
     const equipItem = (item) => {
         if (item && item.type) {
             setEquippedItems(prev => ({
@@ -137,7 +174,6 @@ export const CurrencyProvider = ({ children }) => {
     };
 
     const value = {
-        // Existing
         currency,
         setCurrency,
         coins,
@@ -146,15 +182,11 @@ export const CurrencyProvider = ({ children }) => {
         inventory,
         addToInventory,
         getCurrencySymbol,
-
-        // V3: Progression
         xp,
         level,
         addXP,
         badges,
         unlockBadge,
-
-        // V3: Equipment
         equippedItems,
         equipItem,
         unequipItem,
